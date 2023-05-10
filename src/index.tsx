@@ -1,5 +1,4 @@
-import { Suspense, useState } from 'react'
-import reactLogo from './assets/svg/react.svg'
+import { Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './routes/login'
 import React from 'react'

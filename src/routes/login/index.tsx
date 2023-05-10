@@ -1,71 +1,61 @@
-import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import styles from './index.module.less';
 import backgroundImage from '/src/assets/img/background.jpeg';
-
-interface LoginFormType {
-    username: string;
-    password: string;
-}
+import { Button, Divider, Form, Input, message } from 'antd';
+import { Client } from "@/utils/client"
+import { useState } from "react";
 
 const LoginPage = () => {
-    const [loginForm, setLoginForm] = useState<LoginFormType>({
-        username: '',
-        password: '',
-    });
+    const [form] = Form.useForm()
     const navigate = useNavigate();
-    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [buttonLoading, setButtonLoading] = useState(false)
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoginForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    };
+    const handleCancel = () => {
+    }
 
-    // TODO: 发送登录请求并校验用户名和密码是否正确
-    const isLoginSuccess = true; // 登录成功标志
-
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (isLoginSuccess) {
-            // TODO将登录逻辑放在这里
-            navigate("/");
-        } else {
-            setErrorMsg('用户名或密码错误');
-        }
-    };
+    const onSubmit = () => {
+        form.validateFields().then(values => {
+            setButtonLoading(true)
+            new Client({})
+                .login({ ...values, project: 'ar' })
+                .then(res => {
+                    message.success(res.message)
+                    navigate('/')
+                })
+                .catch(err => {
+                    message.error(err.message)
+                })
+                .finally(() => setButtonLoading(false))
+        })
+    }
 
     return (
         <div className={styles.loginPage} style={{ backgroundImage: `url(${backgroundImage})` }}>
-            <div className={styles.container}>
-                <form onSubmit={handleFormSubmit} className={styles.loginForm}>
-                    <h2 className={styles.title}>登录</h2>
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="username">账号</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={loginForm.username}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    <div className={styles.inputGroup}>
-                        <label htmlFor="password">密码</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={loginForm.password}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                    {errorMsg && <p className={styles.error}>{errorMsg}</p>}
-                    <button type="submit" className={styles.btn}>
+            <Form className={styles.loginForm} form={form}>
+                <h1 className={styles.loginTitle}>欢迎登录</h1>
+                <Form.Item name="account" rules={[{ required: true, message: '请输入用户名' }]} className={styles.loginInput}>
+                    <Input placeholder="用户名" />
+                </Form.Item>
+
+                <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]} className={styles.loginInput}>
+                    <Input.Password placeholder="密码" />
+                </Form.Item>
+
+                <Form.Item className={styles.loginBtn}>
+                    <Button type="primary" htmlType="submit" block onClick={onSubmit} loading={buttonLoading}>
                         登录
-                    </button>
-                </form>
-            </div>
-        </div >
-    );
+                    </Button>
+                </Form.Item>
+
+                <Divider>或</Divider>
+
+                <Form.Item>
+                    <Button type="dashed" block>
+                        注册
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>);
 };
 
 export default LoginPage;

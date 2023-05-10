@@ -30,6 +30,13 @@ export default defineConfig({
   },
 
   server: {
-    port: 6001,
+    port: 5001,
+    proxy: {
+      '/ind': {
+        target: 'http://124.223.115.179:6001/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ind/, '')
+      },
+    }
   }
 })

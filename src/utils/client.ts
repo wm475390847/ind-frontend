@@ -64,7 +64,6 @@ export class Client {
         request.interceptors.response.use(
             // 因为我们接口的数据都在res.data下，所以我们直接返回res.data
             (res: AxiosResponse) => {
-                console.log(res);
                 if (res.status === 1100) {
                     // 登录已过期
                     this.logout();
@@ -95,17 +94,6 @@ export class Client {
             },
         );
         this.request = request;
-    }
-
-    /**
-     * 获取token方法
-     */
-    get token(): string {
-        if (!this._token) {
-            // 从浏览器缓存中获取 token 参数
-            this._token = getItem(Client.TOKEN_IDENTIFIER)
-        }
-        return this._token
     }
 
     /**
@@ -168,9 +156,20 @@ export class Client {
      * 给 URL 加上 _t=时间戳
      * @param {string} url 完整 url 或者 path
     */
-    protected addTimestamp(url: string): string {
+    private addTimestamp(url: string): string {
         const t = `_t=${Date.now()}`;
         const sep = url.includes('?') ? '&' : '?';
         return url + sep + t;
+    }
+
+    /**
+     * 获取token方法
+    */
+    get token(): string {
+        if (!this._token) {
+            // 从浏览器缓存中获取 token 参数
+            this._token = getItem(Client.TOKEN_IDENTIFIER)
+        }
+        return this._token
     }
 }

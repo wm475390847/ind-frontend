@@ -13,6 +13,7 @@ const themeVariables = lessToJS(
 export default defineConfig({
 
   build: {
+    chunkSizeWarningLimit: 2000,
     manifest: false,
     rollupOptions: {
       output: {

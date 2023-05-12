@@ -23,8 +23,20 @@ export interface Login {
   project: string
 }
 
+export interface AuthInfo {
+  id: number
+  account: string
+  project: string
+}
+
+export interface SelectUserReq {
+  pageNo: number
+  pageSize: number
+}
+
 export interface UserInfo {
   id: number
   account: string
   project: string
 }
+

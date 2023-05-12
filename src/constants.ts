@@ -21,3 +21,19 @@ export const Video = ['mp4', 'MP4'];
 export const Image = ['png', 'PNG', 'jpeg', 'JPEG', 'jpg', 'JPG', 'gif', 'GIF'];
 export const ImageNoGif = ['png', 'PNG', 'jpeg', 'JPEG', 'jpg', 'JPG'];
 export const Doc = ['doc', 'docs', 'docx', 'pdf', 'ppt', 'pptx', 'txt', 'xls', 'xlsx'];
+
+export const PageTitle = {
+  home: '主页',
+  user: '用户管理',
+  face: '人脸检测',
+  case: '用例管理',
+  caseData: '用例数据',
+  caseList: '用例列表',
+  interface: '接口测试',
+  perf: '性能测试',
+};
+
+export enum UserTypeEnum {
+  "管理员",
+  "普通员工",
+}

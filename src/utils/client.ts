@@ -2,6 +2,9 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem, removeItem, setItem } from './Storage';
 import { Login, RequestOpt } from "@/services/interface";
 import { BASE_PATH, DOMAIN } from "@/constants";
+import qs from 'qs';
+import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 export class Client {
 
@@ -64,9 +67,10 @@ export class Client {
         request.interceptors.response.use(
             // 因为我们接口的数据都在res.data下，所以我们直接返回res.data
             (res: AxiosResponse) => {
-                if (res.status === 1100) {
+                if (res.data.code === "1100") {
+                    console.log('登录过期');
                     // 登录已过期
-                    this.logout();
+                    this.retuenLoginPage()
                 }
                 return res.data
             },
@@ -103,6 +107,7 @@ export class Client {
         return new Promise(async (resolve, reject) => {
             const res: any = await this.get(`/auth/logout`);
             if (res?.code === '200') {
+                this.retuenLoginPage()
                 // 请空本地缓存token及浏览器缓存
                 this._token = '';
                 removeItem(Client.TOKEN_IDENTIFIER);
@@ -132,16 +137,20 @@ export class Client {
         });
     }
 
+
+
+    public async get(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
+        const queryString = qs.stringify(data);
+        const fullUrl = `${BASE_PATH}${url}${queryString ? `?${queryString}` : ''}`;
+        return this.request.get(this.addTimestamp(fullUrl), config);
+    }
+
     public async post(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
         return this.request.post(this.addTimestamp(`${BASE_PATH}${url}`), data, config);
     }
 
     public async put(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
         return this.request.put(this.addTimestamp(`${BASE_PATH}${url}`), data, config);
-    }
-
-    public async get(url: string, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
-        return this.request.get(this.addTimestamp(`${BASE_PATH}${url}`), config);
     }
 
     public async patch(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
@@ -160,6 +169,13 @@ export class Client {
         const t = `_t=${Date.now()}`;
         const sep = url.includes('?') ? '&' : '?';
         return url + sep + t;
+    }
+
+    private retuenLoginPage() {
+        //返回登录页面
+        const loginPageUrl = '/login';
+        const newUrl = `${loginPageUrl}`;
+        window.location.href = newUrl;
     }
 
     /**

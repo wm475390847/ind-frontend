@@ -11,6 +11,18 @@ const themeVariables = lessToJS(
 
 // https://vitejs.dev/config/
 export default defineConfig({
+
+  build: {
+    manifest: false,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      }
+    }
+  },
+
   plugins: [react()],
 
   resolve: {

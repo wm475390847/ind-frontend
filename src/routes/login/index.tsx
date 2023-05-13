@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Divider, Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { Client } from "@/utils/client"
 import React, { useState } from "react";
-import backgroundImage from '/src/assets/img/background.jpeg';
 import styles from './index.module.less';
 
 const LoginPage: React.FC = () => {
@@ -42,7 +41,7 @@ const LoginPage: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item >
-                    <Button className={styles.loginButton} style={{ borderRadius: '8px' }} type="primary" onClick={onSubmit} loading={buttonLoading}>
+                    <Button className={styles.loginButton} type="primary" onClick={onSubmit} loading={buttonLoading}>
                         登录
                     </Button>
                 </Form.Item>

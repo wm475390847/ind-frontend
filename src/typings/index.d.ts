@@ -1,11 +1,11 @@
-export interface IPageRequest<T> {
+interface IPageRequest<T> {
   current: number
   pages: number
   records: T[]
   total: number
 }
 
-export interface RequestOpt {
+interface RequestOpt {
   map(arg0: (e: any) => void): unknown;
   code: string
   data: any
@@ -17,26 +17,33 @@ export interface RequestOpt {
   total?: number
 }
 
-export interface Login {
+interface ExitDto {
+  exitId: string
+  exitName: string
+}
+
+// -----------------------------------返回接口
+interface UserInfo {
+  id: number
+  account: string
+  project: string
+}
+
+interface AuthInfo {
+  id: number
+  account: string
+  project: string
+}
+
+// -----------------------------------请求接口
+
+interface LoginReq {
   account: string
   password: string
   project: string
 }
 
-export interface AuthInfo {
-  id: number
-  account: string
-  project: string
-}
-
-export interface SelectUserReq {
+interface SelectUserReq {
   pageNo: number
   pageSize: number
 }
-
-export interface UserInfo {
-  id: number
-  account: string
-  project: string
-}
-

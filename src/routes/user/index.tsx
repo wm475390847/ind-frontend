@@ -2,7 +2,6 @@ import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
 import { Button, Popconfirm, Table } from 'antd'
 import { getUserList } from "@/services"
-import { UserInfo } from "@/services/interface"
 import styles from './index.module.less'
 import moment from "moment"
 import { UserTypeEnum } from "@/constants"

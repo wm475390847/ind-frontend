@@ -1,10 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem, removeItem, setItem } from './Storage';
-import { Login, RequestOpt } from "@/services/interface";
 import { BASE_PATH, DOMAIN } from "@/constants";
 import qs from 'qs';
-import { useNavigate } from "react-router-dom";
-import { message } from "antd";
 
 export class Client {
 
@@ -123,7 +120,7 @@ export class Client {
      * @param data 请求数据
      * @returns 
      */
-    public login(data: Login): Promise<RequestOpt> {
+    public login(data: LoginReq): Promise<RequestOpt> {
         return new Promise(async (resolve, reject) => {
             const res: any = await this.post(`/auth/login`, data);
             if (res?.code === '200') {

@@ -1,23 +1,24 @@
 import { Button, Form, Input, Modal } from "antd"
 
-import { useState } from "react";
-import styles from './index.module.less';
-
 type CreateExitModalProps = {
     open: boolean
     onCancel?: () => void
+    onCerateSuccess: (exitDto: ExitDto) => void
 }
 
 export const CreateExit: React.FC<CreateExitModalProps> = (props) => {
     const [form] = Form.useForm()
-    const { open, onCancel } = (props)
+    const { open, onCancel, onCerateSuccess } = (props)
 
     const handleCancel = () => {
         onCancel && onCancel()
     }
 
     const onSubmit = () => {
-
+        form.validateFields().then(values => {
+            onCerateSuccess({ ...values })
+            handleCancel()
+        })
     }
 
     return (

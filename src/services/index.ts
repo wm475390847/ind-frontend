@@ -1,6 +1,4 @@
 import { Client } from "@/utils/client"
-import { SelectUserReq, IPageRequest, UserInfo } from "./interface";
-
 
 const client = new Client({})
 

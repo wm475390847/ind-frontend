@@ -99,10 +99,10 @@ const UserPage: React.FC = () => {
 
     return (
         <div>
-            <div className={styles.action}>
+            <div className={styles.button}>
                 <Button type='primary'>新增用户</Button>
             </div>
-            <div>
+            <div className={styles.table}>
                 <Table
                     columns={columns}
                     dataSource={userList}
@@ -110,13 +110,8 @@ const UserPage: React.FC = () => {
                     pagination={{ total, current: pageNo, showSizeChanger: true }}
                     loading={loading}
                     onChange={onChangeTable}
-                    className={styles.table}
                 />
             </div>
-            {/* 报告组件 */}
-            {/* {status == 3 && <TaskReportModal taskInfo={taskInfo} onCancel={() => setTaskInfo(undefined)} />} */}
-            {/* 编辑组件 */}
-            {/* {status == 2 && <UpdateTaskModal taskInfo={taskInfo} setLoading={setLoading} onCancel={() => setTaskInfo(undefined)} />} */}
         </div>
     )
 }

@@ -8,7 +8,12 @@ type ExitMapModalProps = {
     updateExitList(newExitList: ExitDto[]): void
 }
 
-export const ExitMap: React.FC<ExitMapModalProps> = (props) => {
+/**
+ * 映射表
+ * @param props 参数
+ * @returns 
+ */
+export const Map: React.FC<ExitMapModalProps> = (props) => {
     const [form] = Form.useForm()
     const { exitDtoList, updateExitList } = (props)
 
@@ -38,4 +43,4 @@ export const ExitMap: React.FC<ExitMapModalProps> = (props) => {
         </Form >
     )
 }
-export default ExitMap
+export default Map

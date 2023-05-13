@@ -17,10 +17,8 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 
-
-const { Sider, Content, Header } = Layout;
-
 export const PageLayout: React.FC<LayoutProp> = ({ routes }) => {
+  const { Sider, Content, Header } = Layout;
   const [selectKey, setSelectKey] = useState(null);
   const [openKeys, setOpenKeys] = useState<any[]>([]);
   const [username, setUsername] = useState('');

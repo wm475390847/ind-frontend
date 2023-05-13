@@ -25,7 +25,7 @@ export const Doc = ['doc', 'docs', 'docx', 'pdf', 'ppt', 'pptx', 'txt', 'xls', '
 export const PageTitle = {
   home: '主页',
   user: '用户管理',
-  face: '人脸检测',
+  config: '系统配置',
   case: '用例管理',
   caseData: '用例数据',
   caseList: '用例列表',

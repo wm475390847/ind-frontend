@@ -1,6 +1,6 @@
 import { PageTitle } from '@/constants';
 import UserPage from './routes/user';
-
+import ConfigPage from './routes/config';
 
 export interface RouteBase {
   name: string;
@@ -18,6 +18,13 @@ const routes: RouteBase[] = [
     path: '/app/user',
     element: UserPage,
     icon: "UserOutlined",
+    children: [],
+  },
+  {
+    name: PageTitle.config,
+    path: '/app/config',
+    element: ConfigPage,
+    icon: "SettingOutlined",
     children: [],
   }
 ];

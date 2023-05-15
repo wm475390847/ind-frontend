@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select } from "antd"
+import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useEffect, useState } from "react";
 import { UserTypeEnum } from "@/constants";
 
@@ -25,13 +25,14 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
     }
 
     const onSubmit = () => {
-        form.validateFields()
-            .then(values => {
-                console.log(values);
-                setButtonLoading(true)
-            }).catch(err => {
-
-            }).finally(() => setButtonLoading(false))
+        form.validateFields().then(values => {
+            console.log(values);
+            if (type === 3 && values.password1 != values.password2) {
+                message.error("新密码两次填写不一致")
+                return
+            }
+            console.log("重置用户:", userInfo?.id);
+        })
     }
 
     useEffect(() => {
@@ -91,11 +92,11 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                 {(type === 1 || type === 3) ? (
                     < div >
                         <Form.Item label='密码' name='password1' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input placeholder="请填写密码" />
+                            <Input.Password placeholder="请填写密码" />
                         </Form.Item>
 
                         <Form.Item label='确认密码' name='password2' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input placeholder="请确认密码" />
+                            <Input.Password placeholder="请确认密码" />
                         </Form.Item>
                     </div>
 

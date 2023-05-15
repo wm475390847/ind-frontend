@@ -97,10 +97,10 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
         <div className={styles.menuText} onClick={() => setType(1)}>个人信息</div>
       </div>
 
-      {/* <div className={classnames(styles.popLine)} >
+      <div className={classnames(styles.popLine)} >
         <img src={modify} className={styles.icon} alt="" />
         <div className={styles.menuText} onClick={() => setType(2)}>修改密码</div>
-      </div> */}
+      </div>
 
       <div className={styles.popLine} >
         <img src={logoutIcon} className={styles.icon} alt="" />

@@ -69,7 +69,7 @@ const ConfigPage: React.FC = () => {
         <>
             <Tabs defaultActiveKey="A" onChange={onTabsChange} items={items} />
             {tabKey === 'A' &&
-                <>
+                <div className={styles.wrap}>
                     <div className={styles.exitTitleGroup}>
                         <div className={styles.title}>排放口ID</div>
                         <div className={styles.title}>排放口名称</div>
@@ -81,7 +81,7 @@ const ConfigPage: React.FC = () => {
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
                         <Button type='primary'>保存</Button>
                     </div>
-                </>
+                </div>
             }
 
             {tabKey === 'B' && tokenInfo &&

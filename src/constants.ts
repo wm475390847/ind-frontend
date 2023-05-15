@@ -34,7 +34,7 @@ export const PageTitle = {
 };
 
 
-export enum UserTypeEnum {
-  "管理员" = 0,
-  "普通员工" = 1,
-}
+export const UserTypeEnum = [
+  "管理员",
+  "普通员工",
+]

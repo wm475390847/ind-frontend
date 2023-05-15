@@ -99,8 +99,6 @@ const UserPage: React.FC = () => {
 
     const handleDeleteUser = (id: number) => {
         console.log("删除用户:", id);
-        console.log(UserTypeEnum);
-
     }
 
     useEffect(() => {

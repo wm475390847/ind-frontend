@@ -30,7 +30,7 @@ export const MapModule: React.FC<MapModuleProps> = (props) => {
     }
 
     return (
-        <Form form={form}>
+        <Form form={form} className={styles.form}>
             {exitDtoList?.map((item, index) => (
                 <React.Fragment key={index} >
                     <div className={styles.inputGroup}>

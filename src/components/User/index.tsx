@@ -24,6 +24,18 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
         onCancel && onCancel()
     }
 
+    const options = () => {
+        const arr: any[] = [];
+        UserTypeEnum.map((item, index) => {
+            arr.push({
+                value: index,
+                label: item
+            })
+        })
+        console.log(arr)
+        return arr
+    }
+
     const onSubmit = () => {
         form.validateFields().then(values => {
             console.log(values);
@@ -81,10 +93,7 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                         </Form.Item><Form.Item label='账号类型' name='type' rules={[{ required: true, message: "账号类型不能为空" }]} initialValue={1}>
                             <Select
                                 style={{ width: 120 }}
-                                options={[
-                                    { value: 0, label: '管理员' },
-                                    { value: 1, label: '普通用户' },
-                                ]} />
+                                options={options()} />
                         </Form.Item>
                     </>) : null
                 }

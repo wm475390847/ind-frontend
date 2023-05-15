@@ -1,7 +1,7 @@
 import { Button, Form, Input, Modal } from "antd"
 import styles from './index.module.less'
 
-type CreateExitModalProps = {
+type CreateExitModuleProps = {
     open: boolean
     onCancel?: () => void
     onCerateSuccess: (exitDto: ExitDto) => void
@@ -11,7 +11,7 @@ type CreateExitModalProps = {
  * @param props 参数
  * @returns 
  */
-export const CreateExit: React.FC<CreateExitModalProps> = (props) => {
+export const CreateExitModule: React.FC<CreateExitModuleProps> = (props) => {
     const [form] = Form.useForm()
     const { open, onCancel, onCerateSuccess } = (props)
 
@@ -36,16 +36,17 @@ export const CreateExit: React.FC<CreateExitModalProps> = (props) => {
             width={350}
         >
             <Form
+                className={styles.form}
                 preserve={false}
                 form={form}>
-                <Form.Item name="exitId" className={styles.formItem} rules={[{ required: true, message: '请输入排放口id' }]} >
-                    <Input placeholder="ID" />
+                <Form.Item name="exitId" rules={[{ required: true, message: '请输入排放口ID' }]} >
+                    <Input placeholder="请输入排放口ID" />
                 </Form.Item>
                 <Form.Item name="exitName" rules={[{ required: true, message: '请输入排放口名称' }]} >
-                    <Input placeholder="名称" />
+                    <Input placeholder="请输入排放口名称" />
                 </Form.Item>
             </Form>
         </Modal >
     )
 }
-export default CreateExit
+export default CreateExitModule

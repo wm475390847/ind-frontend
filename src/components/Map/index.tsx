@@ -3,7 +3,7 @@ import styles from './index.module.less'
 import { MinusCircleTwoTone } from '@ant-design/icons';
 import React, { } from "react";
 
-type ExitMapModalProps = {
+type MapModuleProps = {
     exitDtoList: ExitDto[]
     updateExitList(newExitList: ExitDto[]): void
 }
@@ -13,7 +13,7 @@ type ExitMapModalProps = {
  * @param props 参数
  * @returns 
  */
-export const Map: React.FC<ExitMapModalProps> = (props) => {
+export const MapModule: React.FC<MapModuleProps> = (props) => {
     const [form] = Form.useForm()
     const { exitDtoList, updateExitList } = (props)
 
@@ -43,4 +43,4 @@ export const Map: React.FC<ExitMapModalProps> = (props) => {
         </Form >
     )
 }
-export default Map
+export default MapModule

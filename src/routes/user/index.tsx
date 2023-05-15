@@ -5,6 +5,7 @@ import { getUserList } from "@/services"
 import styles from './index.module.less'
 import moment from "moment"
 import { UserTypeEnum } from "@/constants"
+import UserModule from "@/components/User"
 
 const UserPage: React.FC = () => {
     const [loading, setLoading] = useState(true)
@@ -15,6 +16,9 @@ const UserPage: React.FC = () => {
     const [total, setTotal] = useState(0)
 
     const [userList, setUserList] = useState<UserInfo[]>()
+    const [type, setType] = useState<number>()
+    const [userInfo, setUserInfo] = useState<UserInfo>()
+
 
     const columns = useMemo<ColumnsType<any>>(() => {
         return [
@@ -63,8 +67,8 @@ const UserPage: React.FC = () => {
                 render: (_, record) => {
                     return (
                         <div className={styles.tableAction}>
-                            <Button type="primary" onClick={undefined}>编辑</Button>
-                            <Popconfirm title='确定删除？' placement="top" okText="是" cancelText="否" >
+                            <Button type="primary" onClick={() => { setType(2), setUserInfo(record) }}>编辑</Button>
+                            <Popconfirm title='确定删除？' placement="top" okText="是" cancelText="否" onConfirm={() => handleDeleteUser(record.id)}>
                                 <Button loading={buttonLoading}>删除</Button>
                             </Popconfirm>
                             <Button onClick={undefined}>重置密码</Button>
@@ -93,26 +97,29 @@ const UserPage: React.FC = () => {
         })
     }
 
+    const handleDeleteUser = (id: number) => {
+        console.log("删除:", id);
+    }
+
     useEffect(() => {
         loading && handleGetUserList()
     }, [pageNo, loading])
 
     return (
-        <div>
+        <>
             <div className={styles.button}>
-                <Button type='primary'>新增用户</Button>
+                <Button type='primary' onClick={() => setType(1)}>新增用户</Button>
             </div>
-            <div className={styles.table}>
-                <Table
-                    columns={columns}
-                    dataSource={userList}
-                    rowKey='id'
-                    pagination={{ total, current: pageNo, showSizeChanger: true }}
-                    loading={loading}
-                    onChange={onChangeTable}
-                />
-            </div>
-        </div>
+            <Table
+                className={styles.table}
+                columns={columns}
+                dataSource={userList}
+                rowKey='id'
+                pagination={{ total, current: pageNo, showSizeChanger: true }}
+                loading={loading}
+                onChange={onChangeTable} />
+            <UserModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)}></UserModule>
+        </>
     )
 }
 

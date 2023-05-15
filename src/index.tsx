@@ -3,7 +3,7 @@ import { ConfigProvider } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './routes/login'
 import { createRoot } from 'react-dom/client'
-import { PageLayout } from './components/PageLayout'
+import { PageLayoutModule } from './components/PageLayout'
 import routes from './routes'
 import moment from 'moment'
 import zhCN from 'antd/es/locale/zh_CN';
@@ -38,7 +38,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={(
-            <PageLayout routes={routes} />
+            <PageLayoutModule routes={routes} />
           )}>
             {routeList}
           </Route>

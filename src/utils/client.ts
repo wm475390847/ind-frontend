@@ -33,6 +33,7 @@ export class Client {
         // 不传入的话使用默认的url
         options.http = DOMAIN;
         this.createAxios(options.http)
+
     }
 
     /**
@@ -46,7 +47,7 @@ export class Client {
             headers: {
                 // 设置请求头中默认的 Content-Type 和 Accept
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': '*/*',
             },
             // 允许发送跨域请求时携带cookie
             withCredentials: true
@@ -64,8 +65,13 @@ export class Client {
         request.interceptors.response.use(
             // 因为我们接口的数据都在res.data下，所以我们直接返回res.data
             (res: AxiosResponse) => {
-                if (res.data.code === "1100") {
-                    console.log('登录过期');
+                if (res.data.code === '1100') {
+                    console.log('token过期');
+                    // 登录已过期
+                    this.retuenLoginPage()
+                }
+                if (res.data.code === '1102') {
+                    console.log('token失效');
                     // 登录已过期
                     this.retuenLoginPage()
                 }
@@ -100,7 +106,7 @@ export class Client {
     /**
      * 退出登录
      */
-    public logout(): Promise<RequestOpt> {
+    public logout(): Promise<RequestDto> {
         return new Promise(async (resolve, reject) => {
             const res: any = await this.get(`/auth/logout`);
             if (res?.code === '200') {
@@ -120,7 +126,7 @@ export class Client {
      * @param data 请求数据
      * @returns 
      */
-    public login(data: LoginReq): Promise<RequestOpt> {
+    public login(data: LoginReq): Promise<RequestDto> {
         return new Promise(async (resolve, reject) => {
             const res: any = await this.post(`/auth/login`, data);
             if (res?.code === '200') {
@@ -134,20 +140,20 @@ export class Client {
         });
     }
 
-
-
     public async get(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
         const queryString = qs.stringify(data);
         const fullUrl = `${BASE_PATH}${url}${queryString ? `?${queryString}` : ''}`;
         return this.request.get(this.addTimestamp(fullUrl), config);
     }
 
-    public async post(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
-        return this.request.post(this.addTimestamp(`${BASE_PATH}${url}`), data, config);
+    public async post(url: string, data?: any, contentType?: string, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
+        const newConfig = contentType && this.getConfig(contentType)
+        return this.request.post(this.addTimestamp(`${BASE_PATH}${url}`), data, newConfig ? newConfig : config);
     }
 
-    public async put(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
-        return this.request.put(this.addTimestamp(`${BASE_PATH}${url}`), data, config);
+    public async put(url: string, data?: any, contentType?: string, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
+        const newConfig = contentType && this.getConfig(contentType)
+        return this.request.put(this.addTimestamp(`${BASE_PATH}${url}`), data, newConfig ? newConfig : config);
     }
 
     public async patch(url: string, data?: any, config?: AxiosRequestConfig<any>): Promise<AxiosResponse<any, any>> {
@@ -173,6 +179,14 @@ export class Client {
         const loginPageUrl = '/login';
         const newUrl = `${loginPageUrl}`;
         window.location.href = newUrl;
+    }
+
+    private getConfig(contentType: string): AxiosRequestConfig {
+        return {
+            headers: {
+                'Content-Type': contentType == null ? "application/json" : contentType
+            }
+        }
     }
 
     /**

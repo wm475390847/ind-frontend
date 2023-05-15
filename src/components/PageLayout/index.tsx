@@ -16,15 +16,21 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
+import { AuthModule } from '../Auth';
 
+type PageLayoutModuleProp = {
+  children?: ReactElement | ReactElement[];
+  routes: RouteBase[];
+};
 
-export const PageLayout: React.FC<LayoutProp> = ({ routes }) => {
-  const { Sider, Content, Header } = Layout;
-  const [selectKey, setSelectKey] = useState(null);
-  const [openKeys, setOpenKeys] = useState<any[]>([]);
-  const [username, setUsername] = useState('');
-  const [avatar, setAvatar] = useState('wa');
-  const [collapsed, setCollapsed] = useState(false);
+export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => {
+  const { Sider, Content, Header } = Layout
+  const [selectKey, setSelectKey] = useState(null)
+  const [openKeys, setOpenKeys] = useState<any[]>([])
+  const [avatar, setAvatar] = useState('wa')
+  const [collapsed, setCollapsed] = useState(false)
+  const [userInfo, setUserInfo] = useState<UserInfo>()
+  const [type, setType] = useState<number>()
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -37,6 +43,39 @@ export const PageLayout: React.FC<LayoutProp> = ({ routes }) => {
     setOpenKeys(_keys);
   }
 
+  const handleGetUserInfo = () => {
+    getUserInfo()
+      .then((res: any) => {
+        setUserInfo({ ...res })
+        setAvatar('')
+      })
+      .catch((errObj: any) => {
+        message.error(errObj.message);
+      })
+  }
+
+  /**
+   * 退出登录
+   */
+  const handleLogout = () => {
+    new Client({})
+      .logout()
+      .then(res => {
+        message.success(res.message)
+      })
+      .catch(err => {
+        message.error(err.message)
+      })
+  }
+
+  /**
+   * 创建icon图标元素
+   */
+  const handleIconToElement = (name: string) =>
+    React.createElement(Icon && (Icon as any)[name], {
+      style: { fontSize: '15px' }
+    })
+
   useEffect(() => {
     handleGetUserInfo();
     const _pathArr: any = location.pathname.split('/');
@@ -48,72 +87,42 @@ export const PageLayout: React.FC<LayoutProp> = ({ routes }) => {
     }
   }, []);
 
-  const handleGetUserInfo = () => {
-    getUserInfo()
-      .then((res: any) => {
-        const { username: username = '', avatar = '', userId = '' } = res || {};
-        setUsername(username);
-        setAvatar(avatar);
-      })
-      .catch((errObj: any) => {
-        message.destroy();
-        message.error(errObj.msg || '获取用户信息失败');
-      })
-  }
-
-  const hanldeLogout = () => {
-    new Client({})
-      .logout()
-      .then(res => {
-        message.success(res.message)
-      })
-      .catch(err => {
-        message.error(err.message)
-      })
-  }
-
-  const hanldeResetPassword = () => {
-
-  }
-
-  // 创建icon图标元素
-  const iconToElement = (name: string) =>
-    React.createElement(Icon && (Icon as any)[name], {
-      style: { fontSize: '15px' }
-    })
-
   /**
    * 点开头像弹窗之后的内容
    */
   const popoverContent = (
-    <div className={styles.popoverWrapper}>
-      <div className={classnames(styles.popLine, styles.noHover)}>
+    <div className={styles.popoverWrapper} >
+      <div className={classnames(styles.popLine)}>
         <img src={person} className={styles.icon} alt="" />
-        {username}</div>
-
-      <div className={classnames(styles.popLine)} onClick={hanldeResetPassword}>
-        <img src={modify} className={styles.icon} alt="" />
-        <div className={styles.menuText}>修改密码</div>
+        <div className={styles.menuText} onClick={() => setType(1)}>个人信息</div>
       </div>
 
-      <div className={styles.popLine} onClick={hanldeLogout}>
+      {/* <div className={classnames(styles.popLine)} >
+        <img src={modify} className={styles.icon} alt="" />
+        <div className={styles.menuText} onClick={() => setType(2)}>修改密码</div>
+      </div> */}
+
+      <div className={styles.popLine} >
         <img src={logoutIcon} className={styles.icon} alt="" />
-        <div className={styles.menuText}>退出登录</div>
+        <div className={styles.menuText} onClick={handleLogout}>退出登录</div>
       </div>
     </div>
   )
 
+  /**
+   * 获取目录集合
+   */
   const menuItems = (routes || []).filter((i: RouteBase) => !i.hideInMenu).map(item => {
     if (item.children?.length > 0) {
       const menuItem = {
         label: item.name,
         key: item.path.split('/')[2],
-        icon: iconToElement(item.icon),
+        icon: handleIconToElement(item.icon),
         className: styles.menuFirstItem,
         children: item.children.filter((i: RouteBase) => !i.hideInMenu).map(inItem => ({
           label: (<Link to={inItem.path}>{inItem.name}</Link>),
           key: inItem.path.split('/')[3],
-          icon: iconToElement(item.icon),
+          icon: handleIconToElement(item.icon),
           className: styles.menuItem,
         }))
       }
@@ -122,64 +131,58 @@ export const PageLayout: React.FC<LayoutProp> = ({ routes }) => {
       return {
         label: (<Link to={item.path}>{item.name}</Link>),
         key: item.path.split('/')[2],
-        icon: iconToElement(item.icon),
+        icon: handleIconToElement(item.icon),
         className: styles.menuItem,
       }
     }
   });
 
   return (
-    <Layout className={styles.layout} >
-      <Sider collapsed={collapsed}>
-        <div className={styles.logo}>
-          <img src={logo} alt="" />
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultOpenKeys={[menuItems[0].key]}
-          selectedKeys={[selectKey] as unknown as string[]}
-          openKeys={openKeys}
-          items={menuItems}
-          onSelect={handleMenuChange}
-          onOpenChange={handleOpenChange}
-        />
-      </Sider>
-
-      <Layout>
-        <Header className={styles.header}>
-          <Button className={styles.button}
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-          />
-          <Popover
-            placement="bottomRight"
-            content={popoverContent}
-            trigger="hover"
-          >
-            <div className={styles.user}>
-              {
-                avatar ? (
-                  <img src={avatar} alt="" />
-                ) : username.split('')[0] || 's'
-              }
-            </div>
-          </Popover>
-        </Header>
-
-        <Content style={{ margin: '24px 16px 0', height: '100%' }}>
-          <div style={{ padding: 20, minHeight: 300, background: colorBgContainer, height: '100%', width: '100%' }}>
-            <Outlet />
+    <>
+      <Layout className={styles.layout}>
+        <Sider collapsed={collapsed}>
+          <div className={styles.logo}>
+            <img src={logo} alt="" />
           </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
-      </Layout>
-    </Layout>
-  );
-};
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultOpenKeys={[menuItems[0].key]}
+            selectedKeys={[selectKey] as unknown as string[]}
+            openKeys={openKeys}
+            items={menuItems}
+            onSelect={handleMenuChange}
+            onOpenChange={handleOpenChange} />
+        </Sider>
 
-type LayoutProp = {
-  children?: ReactElement | ReactElement[];
-  routes: RouteBase[];
+        <Layout>
+          <Header className={styles.header}>
+            <Button className={styles.button}
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)} />
+            <Popover
+              placement="bottomRight"
+              content={popoverContent}
+              trigger="hover"
+            >
+              <div className={styles.user}>
+                {avatar ? (
+                  <img src={avatar} alt="" />
+                ) : userInfo?.username.split('')[0] || 's'}
+              </div>
+            </Popover>
+          </Header>
+
+          <Content style={{ margin: '24px 16px 0', height: '100%' }}>
+            <div style={{ padding: 20, minHeight: 300, background: colorBgContainer, height: '100%', width: '100%' }}>
+              <Outlet />
+            </div>
+          </Content>
+          <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+        </Layout>
+      </Layout>
+      <AuthModule type={type} userInfo={userInfo} onCancel={() => setType(undefined)}></AuthModule>
+    </>
+  );
 };

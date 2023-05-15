@@ -69,13 +69,14 @@ const ConfigPage: React.FC = () => {
         <>
             <Tabs defaultActiveKey="A" onChange={onTabsChange} items={items} />
             {tabKey === 'A' &&
-                <div className={styles.wrap}>
-                    <div className={styles.exitTitleGroup}>
+                <div className={styles.exitWrap}>
+                    <div className={styles.titleGroup}>
                         <div className={styles.title}>排放口ID</div>
                         <div className={styles.title}>排放口名称</div>
                     </div>
+
                     {/* 循环添加组件，也可以点击减号删除，主要看list的内容 */}
-                    <MapModule exitDtoList={exitList} updateExitList={newExitList => setExitList(newExitList)} />
+                    <MapModule exitList={exitList} updateExitList={newExitList => setExitList(newExitList)} />
 
                     <div className={styles.buttonGroup}>
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
@@ -84,45 +85,36 @@ const ConfigPage: React.FC = () => {
                 </div>
             }
 
-            {tabKey === 'B' && tokenInfo &&
-                <>
-                    <div className={styles.standardTitleGroup}>
-                        <div className={styles.standard}>排放物</div>
-                        <div className={styles.standard}>排放上限</div>
+            {tabKey === 'B' &&
+                <div className={styles.standardWrap}>
+                    <div className={styles.titleGroup}>
+                        <div className={styles.title}>排放物</div>
+                        <div className={styles.title}>排放上限</div>
                     </div>
-                    <Form form={form}>
-                        <div className={styles.standardContent}>
-                            <div className={styles.item}>001(颗粒物) </div>
-                            <Form.Item className={styles.item}>
-                                <Input />
-                            </Form.Item>
-                            <div className={styles.item}>毫克每立方米</div>
-                        </div>
-                    </Form>
-                </>
+                    <div>
+                        <div >001(颗粒物) </div>
+                        <Form.Item >
+                            <Input />
+                        </Form.Item>
+                        <div >毫克每立方米</div>
+                    </div>
+                </div>
             }
 
             {tabKey === 'D' && tokenInfo &&
-                <Form
-                    form={form}
-                    className={styles.tokenForm}
-                >
-                    <Form.Item
-                        label='TokenId'
-                        name='tokenId'
-                        rules={[{ required: true, message: '请输入tokenId' }]}
-                    >
-                        <Input className={styles.input} />
-                    </Form.Item >
-
-                    <Form.Item>
-                        <Button type="primary" onClick={() => handleModifyToken()} loading={buttongLoading}>提交</Button>
-                    </Form.Item>
-
-                    <Form.Item label='最近更新时间' className={styles.timeItem}>
-                        {moment(tokenInfo?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}
-                    </Form.Item>
-                </Form >
+                <div className={styles.tokenWrap}>
+                    <Form form={form} className={styles.form}>
+                        <Form.Item label='TokenId' name='tokenId' rules={[{ required: true, message: '请输入tokenId' }]}>
+                            <Input className={styles.input} />
+                        </Form.Item >
+                        <Form.Item>
+                            <Button type="primary" onClick={() => handleModifyToken()} loading={buttongLoading}>提交</Button>
+                        </Form.Item>
+                        <Form.Item label='最近更新时间' className={styles.item}>
+                            {moment(tokenInfo?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}
+                        </Form.Item>
+                    </Form >
+                </div>
             }
 
             <CreateExitModule open={open} onCancel={() => setOpen(false)} onCerateSuccess={exitDto => setExitList([...exitList, exitDto])} />

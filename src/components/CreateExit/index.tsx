@@ -12,8 +12,8 @@ type CreateExitModuleProps = {
  * @returns 
  */
 export const CreateExitModule: React.FC<CreateExitModuleProps> = (props) => {
-    const [form] = Form.useForm()
     const { open, onCancel, onCerateSuccess } = (props)
+    const [form] = Form.useForm()
 
     const handleCancel = () => {
         onCancel && onCancel()

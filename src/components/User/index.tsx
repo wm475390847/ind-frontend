@@ -1,6 +1,7 @@
 import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useEffect, useState } from "react";
 import { UserTypeEnum } from "@/constants";
+import styles from './index.module.less'
 
 type UserModuleProps = {
     type?: number
@@ -25,20 +26,14 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
     }
 
     const options = () => {
-        const arr: any[] = [];
-        UserTypeEnum.map((item, index) => {
-            arr.push({
-                value: index,
-                label: item
-            })
-        })
-        console.log(arr)
-        return arr
-    }
+        return UserTypeEnum.map((item, index) => ({
+            value: index,
+            label: item
+        }));
+    };
 
     const onSubmit = () => {
         form.validateFields().then(values => {
-            console.log(values);
             if (type === 3 && values.password1 != values.password2) {
                 message.error("新密码两次填写不一致")
                 return
@@ -72,18 +67,18 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
             title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : '新增用户'}`}
             footer={<Button loading={buttonLoading} type='primary' onClick={onSubmit}>确定</Button>}
             destroyOnClose
-            width={500}
             onCancel={handleCancel}
+            width={500}
         >
             <Form
                 labelCol={{ span: 5 }}
                 wrapperCol={{ span: 16, offset: 1 }}
                 form={form}
                 preserve={false}
-                style={{ marginTop: '20px' }}
+                className={styles.form}
             >
                 {(type === 1 || type === 2) ? (
-                    <>
+                    <div>
                         <Form.Item label='姓名' name='username' rules={[{ required: true, message: "姓名不能为空" }]}>
                             <Input placeholder="请填写员工姓名" />
                         </Form.Item><Form.Item label='手机' name='phone' rules={[{ required: true, message: "手机号不能为空" }]}>
@@ -91,25 +86,20 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                         </Form.Item><Form.Item label='部门' name='department' rules={[{ required: true, message: "部门不能为空" }]}>
                             <Input placeholder="请填写员工部门" />
                         </Form.Item><Form.Item label='账号类型' name='type' rules={[{ required: true, message: "账号类型不能为空" }]} initialValue={1}>
-                            <Select
-                                style={{ width: 120 }}
-                                options={options()} />
+                            <Select className={styles.select} options={options()} />
                         </Form.Item>
-                    </>) : null
+                    </div>) : null
                 }
 
                 {(type === 1 || type === 3) ? (
-                    < div >
+                    <div>
                         <Form.Item label='密码' name='password1' rules={[{ required: true, message: "密码不能为空" }]}>
                             <Input.Password placeholder="请填写密码" />
                         </Form.Item>
-
                         <Form.Item label='确认密码' name='password2' rules={[{ required: true, message: "密码不能为空" }]}>
                             <Input.Password placeholder="请确认密码" />
                         </Form.Item>
-                    </div>
-
-                ) : null}
+                    </div>) : null}
             </Form >
         </Modal>);
 }

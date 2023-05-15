@@ -1,72 +1,52 @@
-.buttonGroup {
+.exitWrap {
+    height: calc(~ '100% - 80px');
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
+    flex-direction: column;
+    margin-top: 15px;
 
-    button {
-        margin-right: 8px;
+    .titleGroup {
+        display: flex;
 
-        &:last-child {
-            margin-right: 0;
+        .title {
+            width: 320px;
+        }
+    }
+
+    .buttonGroup {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-right: 8px;
         }
     }
 }
 
-.tokenForm {
+.standardWrap {
     display: flex;
-    align-items: center;
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 10px;
+    margin-top: 15px;
 
-    .input {
-        width: 300px;
-    }
-
-    .timeItem {
-        margin-left: 50px;
-    }
-}
-
-.standardTitleGroup {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    width: 650px;
-
-    .standard {
-        width: 320px;
-    }
-}
-
-.standardContent {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-top: 20px;
-
-    .item {
-        flex: 1;
-        width: 320px;
-    }
-}
-
-
-.wrap {
-    width: 100%;
-    height: calc(~ '100% - 50px');
-    display: flex;
-    flex-direction: column;
-
-    .exitTitleGroup {
-        margin-top: 10px;
+    .titleGroup {
         display: flex;
-        align-items: center;
-        width: 650px;
 
         .title {
             width: 320px;
+        }
+    }
+}
+
+.tokenWrap {
+    margin-top: 15px;
+
+    .form {
+        display: flex;
+
+        .input {
+            width: 300px;
+        }
+
+        .item {
+            margin-left: 50px;
         }
     }
 }

@@ -53,7 +53,7 @@ export const AuthModule: React.FC<AuthModuleProps> = (props) => {
                     wrapperCol={{ span: 16, offset: 1 }}
                     form={form}
                     preserve={false}
-                    style={{ marginTop: '20px' }}
+                    className={styles.form}
                 >
                     {type === 1 && userInfo &&
                         <div>

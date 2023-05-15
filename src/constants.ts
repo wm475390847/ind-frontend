@@ -33,7 +33,8 @@ export const PageTitle = {
   perf: '性能测试',
 };
 
+
 export enum UserTypeEnum {
-  "管理员",
-  "普通员工",
+  "管理员" = 0,
+  "普通员工" = 1,
 }

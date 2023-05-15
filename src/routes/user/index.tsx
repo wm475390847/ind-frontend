@@ -71,7 +71,7 @@ const UserPage: React.FC = () => {
                             <Popconfirm title='确定删除？' placement="top" okText="是" cancelText="否" onConfirm={() => handleDeleteUser(record.id)}>
                                 <Button loading={buttonLoading}>删除</Button>
                             </Popconfirm>
-                            <Button onClick={undefined}>重置密码</Button>
+                            <Button onClick={() => { setType(3), setUserInfo(record) }}  >重置密码</Button>
                         </div >
                     )
                 }

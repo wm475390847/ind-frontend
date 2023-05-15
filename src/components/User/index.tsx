@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, Select } from "antd"
 import React, { useEffect, useState } from "react";
 import { UserTypeEnum } from "@/constants";
 
@@ -46,12 +46,8 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                     phone: userInfo.phone,
                     department: userInfo.department,
                     type: UserTypeEnum[userInfo.type],
-                })
-            }, 500);
-        } else {
-            setTimeout(() => {
-                userInfo && form.setFieldsValue({
-                    type: UserTypeEnum[userInfo.type],
+                    password1: null,
+                    password2: null
                 })
             }, 500);
         }
@@ -60,7 +56,7 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
     return (
         <Modal
             open={open}
-            title={`${type === 2 ? '编辑' : '新增'}用户`}
+            title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : '新增用户'}`}
             footer={<Button loading={buttonLoading} type='primary' onClick={onSubmit}>确定</Button>}
             destroyOnClose
             width={500}
@@ -73,33 +69,37 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                 preserve={false}
                 style={{ marginTop: '20px' }}
             >
-                <Form.Item label='姓名' name='username' rules={[{ required: type === 1, message: "姓名不能为空" }]}>
-                    <Input placeholder="请填写员工姓名"></Input>
-                </Form.Item>
+                {(type === 1 || type === 2) ? (
+                    <>
+                        <Form.Item label='姓名' name='username' rules={[{ required: true, message: "姓名不能为空" }]}>
+                            <Input placeholder="请填写员工姓名" />
+                        </Form.Item><Form.Item label='手机' name='phone' rules={[{ required: true, message: "手机号不能为空" }]}>
+                            <Input placeholder="请填写员工手机号" />
+                        </Form.Item><Form.Item label='部门' name='department' rules={[{ required: true, message: "部门不能为空" }]}>
+                            <Input placeholder="请填写员工部门" />
+                        </Form.Item><Form.Item label='账号类型' name='type' rules={[{ required: true, message: "账号类型不能为空" }]} initialValue={1}>
+                            <Select
+                                style={{ width: 120 }}
+                                options={[
+                                    { value: 0, label: '管理员' },
+                                    { value: 1, label: '普通用户' },
+                                ]} />
+                        </Form.Item>
+                    </>) : null
+                }
 
-                <Form.Item label='手机' name='phone' rules={[{ required: type === 1, message: "手机号不能为空" }]}>
-                    <Input placeholder="请填写员工手机号"></Input>
-                </Form.Item>
-
-                <Form.Item label='部门' name='department' rules={[{ required: type === 1, message: "部门不能为空" }]}>
-                    <Input placeholder="请填写员工部门"></Input>
-                </Form.Item>
-
-                <Form.Item label='账号类型' name='type' rules={[{ required: type === 1, message: "账号类型不能为空" }]}>
-                    <Input placeholder="默认为普通员工"></Input>
-                </Form.Item>
-
-                {type === 1 &&
+                {(type === 1 || type === 3) ? (
                     < div >
                         <Form.Item label='密码' name='password1' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input placeholder="请填写密码"></Input>
+                            <Input placeholder="请填写密码" />
                         </Form.Item>
 
                         <Form.Item label='确认密码' name='password2' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input placeholder="请确认密码"></Input>
+                            <Input placeholder="请确认密码" />
                         </Form.Item>
                     </div>
-                }
+
+                ) : null}
             </Form >
         </Modal>);
 }

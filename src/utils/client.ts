@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem, removeItem, setItem } from './Storage';
 import { BASE_PATH, DOMAIN } from "@/constants";
 import qs from 'qs';
+import { message } from "antd";
 
 export class Client {
 
@@ -97,6 +98,7 @@ export class Client {
                 } else {
                     err.message = '连接服务器失败!'
                 }
+                message.error(err.message)
                 return Promise.reject(err);
             },
         );

@@ -41,6 +41,42 @@ export const getUserInfo: () => Promise<UserInfo> = () => {
  * 获取token信息
  * @returns 响应结果 
  */
+export const addExitList: (data: ExitDto[]) => Promise<RequestDto> = (data) => {
+    return new Promise(async (resolve, reject) => {
+        await client.post('/config/discharge', data)
+            .then((res: any) => {
+                if (res.success) {
+                    resolve(res);
+                } else {
+                    reject(res);
+                }
+            })
+    });
+}
+
+
+/**
+ * 获取token信息
+ * @returns 响应结果 
+ */
+export const getExitList: () => Promise<RequestDto> = () => {
+    return new Promise(async (resolve, reject) => {
+        await client.get('/config/discharge')
+            .then((res: any) => {
+                if (res.success) {
+                    resolve(res);
+                } else {
+                    reject(res);
+                }
+            })
+    });
+}
+
+
+/**
+ * 获取token信息
+ * @returns 响应结果 
+ */
 export const getTokenInfo: () => Promise<TokenInfo> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/config/token')
@@ -60,7 +96,7 @@ export const getTokenInfo: () => Promise<TokenInfo> = () => {
  */
 export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.put('/config/token', data, 'multipart/form-data')
+        await client.post('/config/token', data, 'multipart/form-data')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -75,12 +111,12 @@ export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (
  * 获取排放标准信息
  * @returns 响应结果 
  */
-export const getEmisssionList: () => Promise<IPageRequest<Emission>> = () => {
+export const getEmisssionList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/config/emission/list')
             .then((res: any) => {
                 if (res.success) {
-                    resolve(res.data);
+                    resolve(res);
                 } else {
                     reject(res);
                 }

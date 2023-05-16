@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import CreateExitModule from '@/components/CreateExit';
 import MapModule from '@/components/Map';
 import moment from 'moment';
-import { getTokenInfo, modifyToken } from '@/services';
+import { addExitList, getExitList, getTokenInfo, modifyToken } from '@/services';
 import EmissionStandardModule from '@/components/EmissionStandard';
 
 const ConfigPage: React.FC = () => {
@@ -13,7 +13,8 @@ const ConfigPage: React.FC = () => {
     const [exitList, setExitList] = useState<ExitDto[]>([])
     const [tabKey, setTabKry] = useState('A')
     const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
-    const [buttongLoading, setButtonLoading] = useState(false)
+    const [tokenButtonLoading, setTokenButtonLoading] = useState(false)
+    const [saveButtonLoading, setSaveButtonLoading] = useState(false)
     const [form] = Form.useForm()
     const items = [
         { label: '排放口', key: 'A', },
@@ -27,22 +28,9 @@ const ConfigPage: React.FC = () => {
         setTabKry(key)
     };
 
-    const handleModifyToken = () => {
-        form.validateFields().then(valus => {
-            console.log(valus);
-            setButtonLoading(true)
-            modifyToken({ ...valus })
-                .then(res => {
-                    message.success(res.message)
-                    setLoading(true)
-                })
-                .catch(err => {
-                    message.error(err.message)
-                })
-                .finally(() => setButtonLoading(false))
-        })
-    }
-
+    /**
+     * 获取token列表
+     */
     const handleGetTokenInfo = () => {
         getTokenInfo()
             .then(res => {
@@ -54,17 +42,77 @@ const ConfigPage: React.FC = () => {
             })
     }
 
+    /**
+     * 修改token
+     */
+    const handleModifyToken = () => {
+        form.validateFields().then(valus => {
+            setTokenButtonLoading(true)
+            modifyToken({ ...valus })
+                .then(res => {
+                    message.success(res.message)
+                    setLoading(true)
+                })
+                .catch(err => {
+                    message.error(err.message)
+                })
+                .finally(() => setTokenButtonLoading(false))
+        })
+    }
+
+    /**
+     * 获取排放口列表
+     */
+    const handleGetExitList = () => {
+        getExitList()
+            .then(res => {
+                setExitList(res.data)
+                setLoading(false)
+            })
+            .catch(err => {
+                message.error(err.message)
+            })
+    }
+
+    /**
+     * 保存排放口列表
+     */
+    const saveExitList = () => {
+        addExitList(exitList)
+            .then(res => {
+                setSaveButtonLoading(true)
+                message.success(res.message)
+                setLoading(true)
+            })
+            .catch(err => {
+                message.error(err.message)
+            }).finally(() => setSaveButtonLoading(false))
+    }
+
     useEffect(() => {
-        if (loading && tabKey == 'D') {
+        if (loading && tabKey === 'A') {
+            handleGetExitList()
+        }
+        if (loading && tabKey === 'D') {
             handleGetTokenInfo()
         }
     }, [loading, tabKey])
+
+
+    useEffect(() => {
+        if (tabKey === 'A') {
+            handleGetExitList()
+        }
+        if (tabKey === 'D') {
+            handleGetTokenInfo()
+        }
+    }, [tabKey])
 
     useEffect(() => {
         tokenInfo && form.setFieldsValue({
             tokenId: tokenInfo.tokenId
         })
-    }, [tokenInfo, form])
+    }, [tokenInfo])
 
     return (
         <>
@@ -81,25 +129,13 @@ const ConfigPage: React.FC = () => {
 
                     <div className={styles.buttonGroup}>
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
-                        <Button type='primary'>保存</Button>
+                        <Button type='primary' onClick={() => saveExitList()} loading={saveButtonLoading}>保存</Button>
                     </div>
                 </div>
             }
 
             {tabKey === 'B' &&
-
-                <EmissionStandardModule></EmissionStandardModule>
-                // <div className={styles.standardWrap}>
-                //     <div className={styles.titleGroup}>
-                //         <div className={styles.title}>排放物</div>
-                //         <div className={styles.title}>排放上限</div>
-                //     </div>
-                //     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                //         <div >001(颗粒物) </div>
-                //         <Form.Item > <Input /></Form.Item>
-                //         <div >毫克每立方米</div>
-                //     </div>
-                // </div>
+                <EmissionStandardModule />
             }
 
             {tabKey === 'D' && tokenInfo &&
@@ -109,7 +145,7 @@ const ConfigPage: React.FC = () => {
                             <Input className={styles.input} />
                         </Form.Item >
                         <Form.Item>
-                            <Button type="primary" onClick={() => handleModifyToken()} loading={buttongLoading}>提交</Button>
+                            <Button type="primary" onClick={() => handleModifyToken()} loading={tokenButtonLoading}>提交</Button>
                         </Form.Item>
                         <Form.Item label='最近更新时间' className={styles.item}>
                             {moment(tokenInfo?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}

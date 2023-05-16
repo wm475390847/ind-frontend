@@ -27,10 +27,9 @@ const EmissionStandardModule: React.FC = () => {
                 key: 'standard',
                 width: '40%',
                 render: (_, record) => {
-                    console.log(record);
                     return (
                         <div className={styles.input}>
-                            <Input defaultValue={record.standard} min={0} onPressEnter={(e) => handleModifyEmission(e, record.id)} onBlur={(e) => handleModifyEmission(e, record.id)} />
+                            <Input defaultValue={record.standard} min={0} onBlur={(e) => handleModifyEmission(e, record.id)} />
                         </div>)
                 }
             },
@@ -51,7 +50,7 @@ const EmissionStandardModule: React.FC = () => {
             id: id
         }).then(res => {
             message.success(res.message)
-            setLoading(false)
+            setLoading(true)
         }).catch(err => {
             message.error(err.message)
         })
@@ -59,8 +58,8 @@ const EmissionStandardModule: React.FC = () => {
 
     const handleGetEmissionList = () => {
         getEmisssionList()
-            .then(data => {
-                setEmissionList(data.records)
+            .then(req => {
+                setEmissionList(req.data)
                 setLoading(false)
             })
             .catch(() => {

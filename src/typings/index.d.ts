@@ -20,6 +20,7 @@ interface RequestDto {
 interface ExitDto {
   exitId: string
   exitName: string
+  o2Avg: string
 }
 
 // -----------------------------------返回接口
@@ -48,7 +49,8 @@ interface TokenInfo {
 
 interface Emission {
   id: number
-  emission: string;
+  serial: string
+  name: string
   standard: string;
   unit: string
 }

@@ -13,19 +13,25 @@ const EmissionStandardModule: React.FC = () => {
                 title: '序号',
                 dataIndex: 'id',
                 key: 'id',
-                width: '20',
+                width: '10%',
             },
             {
-                title: '排放物',
-                dataIndex: 'emission',
-                key: 'emission',
-                width: '20',
+                title: '排放物编号',
+                dataIndex: 'serial',
+                key: 'serial',
+                width: '10%',
+            },
+            {
+                title: '排放物名称',
+                dataIndex: 'name',
+                key: 'name',
+                width: '20%',
             },
             {
                 title: '排放标准',
                 dataIndex: 'standard',
                 key: 'standard',
-                width: '40%',
+                width: '30%',
                 render: (_, record) => {
                     return (
                         <div className={styles.input}>

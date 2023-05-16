@@ -46,6 +46,13 @@ interface TokenInfo {
   gmtCreate: string
 }
 
+interface Emission {
+  id: number
+  emission: string;
+  standard: string;
+  unit: string
+}
+
 // -----------------------------------请求接口
 
 interface LoginReq {

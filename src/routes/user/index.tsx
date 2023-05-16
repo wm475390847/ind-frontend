@@ -106,7 +106,7 @@ const UserPage: React.FC = () => {
     }, [pageNo, loading])
 
     return (
-        <>
+        <div>
             <div className={styles.button}>
                 <Button type='primary' onClick={() => setType(1)}>新增用户</Button>
             </div>
@@ -119,7 +119,7 @@ const UserPage: React.FC = () => {
                 loading={loading}
                 onChange={onChangeTable} />
             <UserModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)}></UserModule>
-        </>
+        </div>
     )
 }
 

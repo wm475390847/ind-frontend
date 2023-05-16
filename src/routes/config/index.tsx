@@ -5,6 +5,7 @@ import CreateExitModule from '@/components/CreateExit';
 import MapModule from '@/components/Map';
 import moment from 'moment';
 import { getTokenInfo, modifyToken } from '@/services';
+import EmissionStandardModule from '@/components/EmissionStandard';
 
 const ConfigPage: React.FC = () => {
     const [open, setOpen] = useState(false)
@@ -86,19 +87,19 @@ const ConfigPage: React.FC = () => {
             }
 
             {tabKey === 'B' &&
-                <div className={styles.standardWrap}>
-                    <div className={styles.titleGroup}>
-                        <div className={styles.title}>排放物</div>
-                        <div className={styles.title}>排放上限</div>
-                    </div>
-                    <div>
-                        <div >001(颗粒物) </div>
-                        <Form.Item >
-                            <Input />
-                        </Form.Item>
-                        <div >毫克每立方米</div>
-                    </div>
-                </div>
+
+                <EmissionStandardModule></EmissionStandardModule>
+                // <div className={styles.standardWrap}>
+                //     <div className={styles.titleGroup}>
+                //         <div className={styles.title}>排放物</div>
+                //         <div className={styles.title}>排放上限</div>
+                //     </div>
+                //     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                //         <div >001(颗粒物) </div>
+                //         <Form.Item > <Input /></Form.Item>
+                //         <div >毫克每立方米</div>
+                //     </div>
+                // </div>
             }
 
             {tabKey === 'D' && tokenInfo &&

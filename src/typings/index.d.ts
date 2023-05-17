@@ -29,7 +29,6 @@ interface MpInfo {
 
 interface UserInfo {
   id: number
-  account: string
   project: string
   username: string
   department: string
@@ -40,7 +39,7 @@ interface UserInfo {
 
 interface AuthInfo {
   id: number
-  account: string
+  phone: string
   project: string
 }
 
@@ -61,7 +60,7 @@ interface Emission {
 // -----------------------------------请求接口
 
 interface LoginReq {
-  account: string
+  phone: string
   password: string
   project: string
 }
@@ -72,12 +71,10 @@ interface SelectUserReq {
 }
 
 interface CreateUserReq {
-  account: string
   project: string
   username: string
   department: string
   phone: string
-  password1: string
-  password2: string
+  password: string
   type: number
 }

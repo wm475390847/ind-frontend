@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
-import { Input, Table, message } from 'antd'
+import { Input, InputNumber, Table, message } from 'antd'
 import { getEmisssionList, modifyEmission } from "@/services"
 import styles from './index.module.less'
 
@@ -35,7 +35,7 @@ const EmissionStandardModule: React.FC = () => {
                 render: (_, record) => {
                     return (
                         <div className={styles.input}>
-                            <Input defaultValue={record.standard} min={0} onBlur={(e) => handleModifyEmission(e, record.id)} />
+                            <InputNumber defaultValue={record.standard} min={0} onBlur={(e) => handleModifyEmission(e, record.id)} />
                         </div>)
                 }
             },

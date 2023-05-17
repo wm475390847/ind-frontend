@@ -110,7 +110,7 @@ export class Client {
      */
     public logout(): Promise<RequestDto> {
         return new Promise(async (resolve, reject) => {
-            const res: any = await this.get(`/auth/logout`);
+            const res: any = await this.post(`/auth/logout`);
             if (res?.code === '200') {
                 this.retuenLoginPage()
                 // 请空本地缓存token及浏览器缓存

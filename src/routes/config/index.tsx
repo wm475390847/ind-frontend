@@ -135,8 +135,9 @@ const ConfigPage: React.FC = () => {
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
                         <Button type='primary' onClick={() => handleAddMapInfoList()} loading={saveButtonLoading}>保存</Button>
                     </div>
+                    <CreateMpInfpModule open={open} mpInfoList={mpInfoList} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpInfoList([...mpInfoList, mpInfo])} />
                 </div>
-            }
+            }  
 
             {tabKey === 'B' &&
                 <EmissionStandardModule />
@@ -162,7 +163,6 @@ const ConfigPage: React.FC = () => {
                 </div>
             }
 
-            <CreateMpInfpModule open={open} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpInfoList([...mpInfoList, mpInfo])} />
         </>
     );
 }

@@ -19,7 +19,7 @@ routes.map((item, index) => {
           key={`${inItem.name}-${inIndex}`}
           path={inItem.path}
           element={<inItem.element />}
-        ></Route>
+        />
       ))
     })
   } else {
@@ -28,7 +28,7 @@ routes.map((item, index) => {
         key={`${item.name}-${index}`}
         path={item.path}
         element={< item.element />}
-      ></Route >
+      />
     ));
   }
 })

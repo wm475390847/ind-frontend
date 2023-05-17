@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/lib/table"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Table } from 'antd'
 
 type MpInfoModuleProps = {
@@ -8,6 +8,11 @@ type MpInfoModuleProps = {
 
 const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
     const { mpInfoList } = props
+    const [dataSource, serDataSource] = useState<MpInfo[]>()
+
+    const handleModifyMpInfoList = () => {
+        serDataSource(mpInfoList.map(e => ({ ...e, unit: "毫克每立方米" })))
+    }
 
     const columns = useMemo<ColumnsType<any>>(() => {
         return [
@@ -21,25 +26,19 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
                 title: '排放口ID',
                 dataIndex: 'mpId',
                 key: 'mpId',
-                width: '10%',
+                width: '20%',
             },
             {
                 title: '排放口名称',
                 dataIndex: 'mpName',
                 key: 'mpName',
-                width: '20%',
+                width: '25%',
             },
             {
                 title: '含氧量均值',
                 dataIndex: 'o2RealAvg',
                 key: 'o2RealAvg',
-                width: '30%',
-                // render: (_, record) => {
-                //     return (
-                //         <div className={styles.input}>
-                //             <Input defaultValue={record.standard} min={0} onBlur={(e) => handleModifyEmission(e, record.id)} />
-                //         </div>)
-                // }
+                width: '25%',
             },
             {
                 title: '单位',
@@ -50,10 +49,14 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
         ]
     }, [])
 
+    useEffect(() => {
+        mpInfoList && handleModifyMpInfoList()
+    }, [mpInfoList])
+
     return (
         <Table
             columns={columns}
-            dataSource={mpInfoList}
+            dataSource={dataSource}
             rowKey='id'
             pagination={false}
             bordered

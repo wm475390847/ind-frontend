@@ -1,11 +1,11 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
-import { Button, Popconfirm, Table } from 'antd'
-import { getUserList } from "@/services"
+import { Button, Popconfirm, Table, message } from 'antd'
+import { deleteUser, getUserList } from "@/services"
 import styles from './index.module.less'
 import moment from "moment"
-import { UserTypeEnum } from "@/constants"
 import UserModule from "@/components/User"
+import { UserTypeList } from "@/constants"
 
 const UserPage: React.FC = () => {
     const [loading, setLoading] = useState(true)
@@ -57,7 +57,7 @@ const UserPage: React.FC = () => {
                 dataIndex: 'type',
                 key: 'type',
                 width: '10%',
-                render: (type) => <div>{UserTypeEnum[type]}</div>
+                render: (type) => <div>{UserTypeList[type]}</div>
             },
             {
                 title: '操作',
@@ -98,7 +98,13 @@ const UserPage: React.FC = () => {
     }
 
     const handleDeleteUser = (id: number) => {
-        console.log("删除用户:", id);
+        setButtongLoading(true)
+        deleteUser(id)
+            .then(res => {
+                message.success(res.message)
+                setLoading(true)
+            }).catch(err => message.error(err.message))
+            .finally(() => setButtongLoading(false))
     }
 
     useEffect(() => {
@@ -109,6 +115,7 @@ const UserPage: React.FC = () => {
         <div>
             <div className={styles.button}>
                 <Button type='primary' onClick={() => setType(1)}>新增用户</Button>
+                <UserModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)} setLoading={setLoading}></UserModule>
             </div>
             <Table
                 className={styles.table}
@@ -118,7 +125,6 @@ const UserPage: React.FC = () => {
                 pagination={{ total, current: pageNo, showSizeChanger: true }}
                 loading={loading}
                 onChange={onChangeTable} />
-            <UserModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)}></UserModule>
         </div>
     )
 }

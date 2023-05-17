@@ -2,6 +2,7 @@ import { Button, Form, Input, Modal, message } from "antd"
 import moment from "moment"
 import React, { useEffect, useState } from "react"
 import styles from './index.module.less'
+import { modifyAuthPassword } from "@/services"
 
 type AuthModuleProps = {
     type?: number
@@ -18,6 +19,7 @@ export const AuthModule: React.FC<AuthModuleProps> = (props) => {
     const [form] = Form.useForm()
     const { type, userInfo, onCancel } = (props)
     const [open, setOpen] = useState(false)
+    const [buttonLoading, setButtonLoading] = useState(false)
 
     const handleCancel = () => {
         setOpen(false)
@@ -31,6 +33,16 @@ export const AuthModule: React.FC<AuthModuleProps> = (props) => {
                     message.error("新密码两次填写不一致")
                     return
                 }
+                setButtonLoading(true)
+                modifyAuthPassword({
+                    password: values.password,
+                    newPassword: values.password1,
+                }).then(res => {
+                    message.success(res.message)
+                    setOpen(false)
+                }).catch(err => {
+                    message.error(err.message)
+                }).finally(() => setButtonLoading(false))
             })
     }
 
@@ -42,9 +54,9 @@ export const AuthModule: React.FC<AuthModuleProps> = (props) => {
         <>
             < Modal
                 open={open}
-                title={`${type === 1 ? '个人信息' : '重置密码'}`}
+                title={`${type === 1 ? '个人信息' : '修改密码'}`}
                 onCancel={handleCancel}
-                footer={type === 2 && < Button type='primary' onClick={onSubmit} > 确定</Button >}
+                footer={type === 2 && < Button type='primary' loading={buttonLoading} onClick={onSubmit} > 确定</Button >}
                 destroyOnClose
                 width={500}
             >

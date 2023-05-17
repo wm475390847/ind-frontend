@@ -1,8 +1,9 @@
-import { Button, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, message } from "antd"
 import styles from './index.module.less'
 
 type CreateMpInfoModuleProps = {
     open: boolean
+    mpInfoList: MpInfo[]
     onCancel?: () => void
     onCerateSuccess: (mpInfo: MpInfo) => void
 }
@@ -12,7 +13,7 @@ type CreateMpInfoModuleProps = {
  * @returns 
  */
 export const CreateMpInfpModule: React.FC<CreateMpInfoModuleProps> = (props) => {
-    const { open, onCancel, onCerateSuccess } = (props)
+    const { open, mpInfoList, onCancel, onCerateSuccess } = (props)
     const [form] = Form.useForm()
 
     const handleCancel = () => {
@@ -21,6 +22,11 @@ export const CreateMpInfpModule: React.FC<CreateMpInfoModuleProps> = (props) => 
 
     const onSubmit = () => {
         form.validateFields().then(values => {
+            // 需要判断一下是否已经在list中
+            if (mpInfoList.some((mp) => mp.mpId === values.mpId)) {
+                message.error('排放口已存在')
+                return
+            }
             onCerateSuccess({ ...values })
             handleCancel()
         })

@@ -1,17 +1,17 @@
 import { Button, Form, Input, Modal } from "antd"
 import styles from './index.module.less'
 
-type CreateExitModuleProps = {
+type CreateMpInfoModuleProps = {
     open: boolean
     onCancel?: () => void
-    onCerateSuccess: (exitDto: ExitDto) => void
+    onCerateSuccess: (mpInfo: MpInfo) => void
 }
 /**
  * 创建排放口
  * @param props 参数
  * @returns 
  */
-export const CreateExitModule: React.FC<CreateExitModuleProps> = (props) => {
+export const CreateMpInfpModule: React.FC<CreateMpInfoModuleProps> = (props) => {
     const { open, onCancel, onCerateSuccess } = (props)
     const [form] = Form.useForm()
 
@@ -39,14 +39,14 @@ export const CreateExitModule: React.FC<CreateExitModuleProps> = (props) => {
                 className={styles.form}
                 preserve={false}
                 form={form}>
-                <Form.Item name="exitId" rules={[{ required: true, message: '请输入排放口ID' }]} >
+                <Form.Item name="mpId" rules={[{ required: true, message: '请输入排放口ID' }]} >
                     <Input placeholder="请输入排放口ID" />
                 </Form.Item>
-                <Form.Item name="exitName" rules={[{ required: true, message: '请输入排放口名称' }]} >
+                <Form.Item name="mpName" rules={[{ required: true, message: '请输入排放口名称' }]} >
                     <Input placeholder="请输入排放口名称" />
                 </Form.Item>
             </Form>
         </Modal >
     )
 }
-export default CreateExitModule
+export default CreateMpInfpModule

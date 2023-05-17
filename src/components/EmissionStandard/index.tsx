@@ -17,8 +17,8 @@ const EmissionStandardModule: React.FC = () => {
             },
             {
                 title: '排放物编号',
-                dataIndex: 'serial',
-                key: 'serial',
+                dataIndex: 'code',
+                key: 'code',
                 width: '10%',
             },
             {

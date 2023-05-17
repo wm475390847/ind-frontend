@@ -1,16 +1,17 @@
 import { Button, Form, Input, Modal, Space, Tabs, message } from 'antd';
 import styles from './index.module.less';
 import { useEffect, useRef, useState } from 'react';
-import CreateExitModule from '@/components/CreateExit';
-import MapModule from '@/components/Map';
+import CreateMpInfpModule from '@/components/CreateMpInfo';
+import MpModule from '@/components/MpMap';
 import moment from 'moment';
-import { addExitList, getExitList, getTokenInfo, modifyToken } from '@/services';
+import { addMpInfoList, getMpInfoList, getTokenInfo, modifyToken } from '@/services';
 import EmissionStandardModule from '@/components/EmissionStandard';
+import MpInfoModule from '@/components/MpInfo';
 
 const ConfigPage: React.FC = () => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [exitList, setExitList] = useState<ExitDto[]>([])
+    const [mpInfoList, setMpInfoList] = useState<MpInfo[]>([])
     const [tabKey, setTabKry] = useState('A')
     const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
     const [tokenButtonLoading, setTokenButtonLoading] = useState(false)
@@ -63,10 +64,10 @@ const ConfigPage: React.FC = () => {
     /**
      * 获取排放口列表
      */
-    const handleGetExitList = () => {
-        getExitList()
+    const handleGetMpInfoList = () => {
+        getMpInfoList()
             .then(res => {
-                setExitList(res.data)
+                setMpInfoList(res.data)
                 setLoading(false)
             })
             .catch(err => {
@@ -77,8 +78,8 @@ const ConfigPage: React.FC = () => {
     /**
      * 保存排放口列表
      */
-    const saveExitList = () => {
-        addExitList(exitList)
+    const handleAddMapInfoList = () => {
+        addMpInfoList(mpInfoList)
             .then(res => {
                 setSaveButtonLoading(true)
                 message.success(res.message)
@@ -91,7 +92,7 @@ const ConfigPage: React.FC = () => {
 
     useEffect(() => {
         if (loading && tabKey === 'A') {
-            handleGetExitList()
+            handleGetMpInfoList()
         }
         if (loading && tabKey === 'D') {
             handleGetTokenInfo()
@@ -101,10 +102,13 @@ const ConfigPage: React.FC = () => {
 
     useEffect(() => {
         if (tabKey === 'A') {
-            handleGetExitList()
+            handleGetMpInfoList()
         }
         if (tabKey === 'D') {
             handleGetTokenInfo()
+        }
+        if (tabKey === 'C') {
+            handleGetMpInfoList()
         }
     }, [tabKey])
 
@@ -118,24 +122,28 @@ const ConfigPage: React.FC = () => {
         <>
             <Tabs defaultActiveKey="A" onChange={onTabsChange} items={items} />
             {tabKey === 'A' &&
-                <div className={styles.exitWrap}>
+                <div className={styles.mpWrap}>
                     <div className={styles.titleGroup}>
                         <div className={styles.title}>排放口ID</div>
                         <div className={styles.title}>排放口名称</div>
                     </div>
 
                     {/* 循环添加组件，也可以点击减号删除，主要看list的内容 */}
-                    <MapModule exitList={exitList} updateExitList={newExitList => setExitList(newExitList)} />
+                    <MpModule mpInfoList={mpInfoList} currentMpInfoList={newMpInfoList => setMpInfoList(newMpInfoList)} />
 
                     <div className={styles.buttonGroup}>
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
-                        <Button type='primary' onClick={() => saveExitList()} loading={saveButtonLoading}>保存</Button>
+                        <Button type='primary' onClick={() => handleAddMapInfoList()} loading={saveButtonLoading}>保存</Button>
                     </div>
                 </div>
             }
 
             {tabKey === 'B' &&
                 <EmissionStandardModule />
+            }
+
+            {tabKey === 'C' &&
+                <MpInfoModule mpInfoList={mpInfoList} />
             }
 
             {tabKey === 'D' && tokenInfo &&
@@ -154,7 +162,7 @@ const ConfigPage: React.FC = () => {
                 </div>
             }
 
-            <CreateExitModule open={open} onCancel={() => setOpen(false)} onCerateSuccess={exitDto => setExitList([...exitList, exitDto])} />
+            <CreateMpInfpModule open={open} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpInfoList([...mpInfoList, mpInfo])} />
         </>
     );
 }

@@ -17,13 +17,16 @@ interface RequestDto {
   total?: number
 }
 
-interface ExitDto {
-  exitId: string
-  exitName: string
-  o2Avg: string
+interface MpInfo {
+  id: number;
+  mpId: string;
+  mpName: string;
+  o2RealAvg: string;
+  o2StandardAvg: string;
+  gmtCreate: string;
+  gmtModified: string;
 }
 
-// -----------------------------------返回接口
 interface UserInfo {
   id: number
   account: string
@@ -49,7 +52,7 @@ interface TokenInfo {
 
 interface Emission {
   id: number
-  serial: string
+  code: string
   name: string
   standard: string;
   unit: string

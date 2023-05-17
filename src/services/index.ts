@@ -41,9 +41,9 @@ export const getUserInfo: () => Promise<UserInfo> = () => {
  * 获取token信息
  * @returns 响应结果 
  */
-export const addExitList: (data: ExitDto[]) => Promise<RequestDto> = (data) => {
+export const addMpInfoList: (data: MpInfo[]) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post('/config/discharge', data)
+        await client.post('/config/mp', data)
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -59,9 +59,9 @@ export const addExitList: (data: ExitDto[]) => Promise<RequestDto> = (data) => {
  * 获取token信息
  * @returns 响应结果 
  */
-export const getExitList: () => Promise<RequestDto> = () => {
+export const getMpInfoList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
-        await client.get('/config/discharge')
+        await client.get('/config/mp')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);

@@ -14,6 +14,13 @@ export interface RouteBase {
 
 const routes: RouteBase[] = [
   {
+    name: PageTitle.forecast,
+    path: '/app/forecast',
+    element: UserPage,
+    icon: "AlertOutlined",
+    children: [],
+  },
+  {
     name: PageTitle.user,
     path: '/app/user',
     element: UserPage,

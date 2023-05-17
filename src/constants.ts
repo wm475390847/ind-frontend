@@ -26,11 +26,7 @@ export const PageTitle = {
   home: '主页',
   user: '用户管理',
   config: '系统配置',
-  case: '用例管理',
-  caseData: '用例数据',
-  caseList: '用例列表',
-  interface: '接口测试',
-  perf: '性能测试',
+  forecast: '小时排放预测',
 };
 
 export const UserTypeList = [

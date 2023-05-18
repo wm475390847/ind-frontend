@@ -1,6 +1,7 @@
 import { PageTitle } from '@/constants';
 import UserPage from './routes/user';
 import ConfigPage from './routes/config';
+import Execl from './routes/excel';
 
 export interface RouteBase {
   name: string;
@@ -16,7 +17,7 @@ const routes: RouteBase[] = [
   {
     name: PageTitle.forecast,
     path: '/app/forecast',
-    element: UserPage,
+    element: Execl,
     icon: "AlertOutlined",
     children: [],
   },

@@ -1,6 +1,7 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
 import { Table } from 'antd'
+import moment from "moment"
 
 type MpInfoModuleProps = {
     mpInfoList: MpInfo[]
@@ -32,19 +33,26 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
                 title: '排放口名称',
                 dataIndex: 'mpName',
                 key: 'mpName',
-                width: '25%',
+                width: '20%',
             },
             {
                 title: '含氧量均值',
                 dataIndex: 'o2RealAvg',
                 key: 'o2RealAvg',
-                width: '25%',
+                width: '15%',
             },
             {
                 title: '单位',
                 dataIndex: 'unit',
                 key: 'unit',
+                width: '15%',
+            },
+            {
+                title: '更新时间',
+                dataIndex: 'gmtModified',
+                key: 'gmtModified',
                 width: '20%',
+                render: (gmtCreate) => gmtCreate && moment(gmtCreate).format('YYYY-MM-DD HH:mm:ss')
             }
         ]
     }, [])

@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { getItem, removeItem, setItem } from './Storage';
-import { BASE_PATH, DOMAIN } from "@/constants";
+import { BASE_PATH, DOMAIN, KEY, PROJECT } from "@/constants";
 import qs from 'qs';
 import { message } from "antd";
+import md5 from "js-md5";
 
 export class Client {
 
@@ -130,7 +131,7 @@ export class Client {
      */
     public login(data: LoginReq): Promise<RequestDto> {
         return new Promise(async (resolve, reject) => {
-            const res: any = await this.post(`/auth/login`, data);
+            const res: any = await this.post(`/auth/login`, { ...data, project: PROJECT, password: md5(data.password + KEY) });
             if (res?.code === '200') {
                 this._token = res.data.token;
                 this._userInfo = res.data

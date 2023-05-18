@@ -5,7 +5,7 @@ import CreateMpInfpModule from '@/components/CreateMpInfo';
 import MpModule from '@/components/MpMap';
 import moment from 'moment';
 import { addMpInfoList, getMpInfoList, getTokenInfo, modifyToken } from '@/services';
-import EmissionStandardModule from '@/components/EmissionStandard';
+import GarbageInfoModule from '@/components/GarbageInfo';
 import MpInfoModule from '@/components/MpInfo';
 
 const ConfigPage: React.FC = () => {
@@ -137,10 +137,10 @@ const ConfigPage: React.FC = () => {
                     </div>
                     <CreateMpInfpModule open={open} mpInfoList={mpInfoList} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpInfoList([...mpInfoList, mpInfo])} />
                 </div>
-            }  
+            }
 
             {tabKey === 'B' &&
-                <EmissionStandardModule />
+                <GarbageInfoModule />
             }
 
             {tabKey === 'C' &&

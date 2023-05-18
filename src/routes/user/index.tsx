@@ -4,7 +4,7 @@ import { Button, Popconfirm, Table, message } from 'antd'
 import { deleteUser, getUserList } from "@/services"
 import styles from './index.module.less'
 import moment from "moment"
-import UserModule from "@/components/User"
+import AccountModule from "@/components/Account"
 import { UserTypeList } from "@/constants"
 
 const UserPage: React.FC = () => {
@@ -37,13 +37,13 @@ const UserPage: React.FC = () => {
                 title: '手机号',
                 dataIndex: 'phone',
                 key: 'phone',
-                width: '15%',
+                width: '10%',
             },
             {
                 title: '部门',
                 dataIndex: 'department',
                 key: 'department',
-                width: '10%',
+                width: '20%',
             },
             {
                 title: '创建时间',
@@ -115,7 +115,7 @@ const UserPage: React.FC = () => {
         <div>
             <div className={styles.button}>
                 <Button type='primary' onClick={() => setType(1)}>新增用户</Button>
-                <UserModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)} setLoading={setLoading}></UserModule>
+                <AccountModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)} setLoading={setLoading} />
             </div>
             <Table
                 className={styles.table}

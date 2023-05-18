@@ -1,10 +1,11 @@
 import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useEffect, useState } from "react";
-import { UserTypeList } from "@/constants";
+import { PROJECT, UserTypeList } from "@/constants";
 import styles from './index.module.less'
-import { addUser, modifyUserInfo, resetPassword } from "@/services";
+import { addUser, modifyAuthPassword, modifyUserInfo, resetPassword } from "@/services";
+import moment from "moment";
 
-type UserModuleProps = {
+type AccountModuleProps = {
     type?: number
     userInfo?: UserInfo
     onCancel?: () => void
@@ -16,7 +17,7 @@ type UserModuleProps = {
  * @param props 参数
  * @returns 
  */
-export const UserModule: React.FC<UserModuleProps> = (props) => {
+export const AccountModule: React.FC<AccountModuleProps> = (props) => {
     const { type, userInfo, onCancel, setLoading } = (props)
     const [form] = Form.useForm()
     const [open, setOpen] = useState(false)
@@ -41,19 +42,22 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
     const onSubmit = () => {
         form.validateFields().then(values => {
             if (type === 3) {
-                if (values.password1 != values.password2) {
+                if (values.newPassword1 != values.newPassword2) {
                     message.error("新密码两次填写不一致")
                     return
                 }
-                userInfo &&
+                if (userInfo) {
+                    setButtonLoading(true)
                     resetPassword({
                         id: userInfo.id,
-                        password: values.password1
+                        password: values.newPassword1
                     }).then(req => {
                         message.success(req.message)
                         handleCancel()
+                        setLoading(true)
                     }).catch(err => message.error(err.message))
                         .finally(() => setButtonLoading(false))
+                }
             }
             if (type === 2) {
                 setButtonLoading(true)
@@ -69,24 +73,39 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                     .finally(() => setButtonLoading(false))
             }
             if (type === 1) {
-                if (values.password1 != values.password2) {
-                    message.error("新密码两次填写不一致")
+                if (values.newPassword1 != values.newPassword2) {
+                    message.error("密码两次填写不一致")
                     return
                 }
                 setButtonLoading(true)
                 addUser({
-                    project: "ind",
+                    project: PROJECT,
                     username: values.username,
                     department: values.department,
                     type: values.type,
                     phone: values.phone,
-                    password: values.password1
+                    password: values.newPassword1
                 })
                     .then(res => {
                         message.success(res.message)
                         handleCancel()
                         setLoading(true)
                     }).catch(err => message.error(err.message))
+                    .finally(() => setButtonLoading(false))
+            }
+            if (type === 5) {
+                if (values.newPassword1 != values.newPassword2) {
+                    message.error("新密码两次填写不一致")
+                    return
+                }
+                setButtonLoading(true)
+                modifyAuthPassword({
+                    password: values.oldPassword,
+                    newPassword: values.newPassword1,
+                }).then(res => {
+                    message.success(res.message)
+                    handleCancel()
+                }).catch(err => message.error(err.message))
                     .finally(() => setButtonLoading(false))
             }
         })
@@ -104,8 +123,9 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                     phone: userInfo.phone,
                     department: userInfo.department,
                     type: UserTypeList[userInfo.type],
-                    password1: null,
-                    password2: null
+                    newPassword1: null,
+                    newPassword2: null,
+                    oldPassword: null
                 })
             }, 500);
         }
@@ -114,7 +134,7 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
     return (
         <Modal
             open={open}
-            title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : '新增用户'}`}
+            title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : type === 4 ? '用户信息' : type === 5 ? '修改密码' : '新增用户'}`}
             footer={<Button loading={buttonLoading} type='primary' onClick={onSubmit}>确定</Button>}
             destroyOnClose
             onCancel={handleCancel}
@@ -130,10 +150,10 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                 {(type === 1 || type === 2) ? (
                     <div>
                         <Form.Item label='姓名' name='username' rules={[{ required: true, message: "姓名不能为空" }]}>
-                            <Input placeholder="请填写员工姓名" />
+                            <Input maxLength={10} placeholder="请填写员工姓名" />
                         </Form.Item>
                         <Form.Item label='手机' name='phone' rules={[{ required: true, message: "手机号不能为空" }]}>
-                            <Input placeholder="请填写员工手机号" />
+                            <Input maxLength={11} placeholder="请填写员工手机号" />
                         </Form.Item>
                         <Form.Item label='部门' name='department' rules={[{ required: true, message: "部门不能为空" }]}>
                             <Input placeholder="请填写员工部门" />
@@ -144,16 +164,33 @@ export const UserModule: React.FC<UserModuleProps> = (props) => {
                     </div>) : null
                 }
 
-                {(type === 1 || type === 3) ? (
+                {type === 5 &&
                     <div>
-                        <Form.Item label='密码' name='password1' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input.Password placeholder="请填写密码" />
+                        <Form.Item name="oldPassword" label="原密码" rules={[{ required: true, message: '原密码不能为空' }]}>
+                            <Input.Password placeholder="请输入原密码" />
                         </Form.Item>
-                        <Form.Item label='确认密码' name='password2' rules={[{ required: true, message: "密码不能为空" }]}>
-                            <Input.Password placeholder="请确认密码" />
+                    </div>
+                }
+
+                {(type === 1 || type === 3 || type === 5) ? (
+                    <div>
+                        <Form.Item label='密码' name='newPassword1' rules={[{ required: true, message: "密码不能为空" }]}>
+                            <Input.Password maxLength={20} placeholder="请填写密码" />
+                        </Form.Item>
+                        <Form.Item label='确认密码' name='newPassword2' rules={[{ required: true, message: "密码不能为空" }]}>
+                            <Input.Password maxLength={20} placeholder="请确认密码" />
                         </Form.Item>
                     </div>) : null}
+
+                {type === 4 && userInfo &&
+                    <div>
+                        <Form.Item label="姓名" >{userInfo?.username}</Form.Item>
+                        <Form.Item label="手机" >{userInfo?.phone}</Form.Item>
+                        <Form.Item label="部门" >{userInfo?.department}</Form.Item>
+                        <Form.Item label="创建时间" >{moment(userInfo?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</Form.Item>
+                    </div>
+                }
             </Form >
         </Modal>);
 }
-export default UserModule
+export default AccountModule

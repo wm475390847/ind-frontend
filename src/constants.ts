@@ -1,5 +1,7 @@
 export const BASE_PATH = '/ind'
 export const DOMAIN = '124.223.115.179:6001'; // 项目主域名
+export const KEY = "/ind!"
+export const PROJECT = 'ind'
 
 // 是否是开发模式
 export const IS_DEV = [

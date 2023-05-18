@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
         form.validateFields().then(values => {
             setButtonLoading(true)
             new Client({})
-                .login({ ...values, project: 'ind' })
+                .login({ ...values, password: values.password })
                 .then(res => {
                     message.success(res.message)
                     navigate('/app/user')

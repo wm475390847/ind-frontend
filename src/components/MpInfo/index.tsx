@@ -36,9 +36,9 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
                 width: '20%',
             },
             {
-                title: '含氧量均值',
-                dataIndex: 'o2RealAvg',
-                key: 'o2RealAvg',
+                title: '氧含量均值',
+                dataIndex: 'o2StandardAvg',
+                key: 'o2StandardAvg',
                 width: '15%',
             },
             {

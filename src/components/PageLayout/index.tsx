@@ -16,7 +16,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import { AuthModule } from '../Auth';
+import AccountModule from '../Account';
 
 type PageLayoutModuleProp = {
   children?: ReactElement | ReactElement[];
@@ -94,12 +94,12 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
     <div className={styles.popoverWrapper} >
       <div className={classnames(styles.popLine)}>
         <img src={person} className={styles.icon} alt="" />
-        <div className={styles.menuText} onClick={() => setType(1)}>个人信息</div>
+        <div className={styles.menuText} onClick={() => setType(4)}>个人信息</div>
       </div>
 
       <div className={classnames(styles.popLine)} >
         <img src={modify} className={styles.icon} alt="" />
-        <div className={styles.menuText} onClick={() => setType(2)}>修改密码</div>
+        <div className={styles.menuText} onClick={() => setType(5)}>修改密码</div>
       </div>
 
       <div className={styles.popLine} >
@@ -182,7 +182,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
         </Layout>
       </Layout>
-      <AuthModule type={type} userInfo={userInfo} onCancel={() => setType(undefined)}></AuthModule>
+      <AccountModule type={type} userInfo={userInfo} onCancel={() => setType(undefined)} setLoading={() => undefined} />
     </>
   );
 };

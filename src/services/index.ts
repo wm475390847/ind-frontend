@@ -1,7 +1,8 @@
+import { KEY } from "@/constants";
 import { Client } from "@/utils/client"
+import md5 from "js-md5";
 
 const client = new Client({})
-
 
 /**
  * 修改密码
@@ -9,7 +10,7 @@ const client = new Client({})
  */
 export const modifyAuthPassword: (data: { password: string, newPassword: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post('/auth/modify', data)
+        await client.post('/auth/modify', { password: md5(data.password + KEY), newPassword: md5(data.newPassword + KEY) })
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -78,7 +79,7 @@ export const deleteUser: (id: number) => Promise<RequestDto> = (id) => {
  */
 export const addUser: (data: CreateUserReq) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post(`/user/add`, data)
+        await client.post(`/user/add`, { ...data, password: md5(data.password + KEY) })
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -95,7 +96,7 @@ export const addUser: (data: CreateUserReq) => Promise<RequestDto> = (data) => {
  */
 export const resetPassword: (data: { id: number, password: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post('/user/reset', data)
+        await client.post('/user/reset', { ...data, password: md5(data.password + KEY) })
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -124,7 +125,7 @@ export const modifyUserInfo: (data: UserInfo) => Promise<RequestDto> = (data) =>
 }
 
 /**
- * 获取token信息
+ * 添加mp
  * @returns 响应结果 
  */
 export const addMpInfoList: (data: MpInfo[]) => Promise<RequestDto> = (data) => {
@@ -142,7 +143,7 @@ export const addMpInfoList: (data: MpInfo[]) => Promise<RequestDto> = (data) => 
 
 
 /**
- * 获取token信息
+ * 获取mp列表
  * @returns 响应结果 
  */
 export const getMpInfoList: () => Promise<RequestDto> = () => {
@@ -177,7 +178,7 @@ export const getTokenInfo: () => Promise<TokenInfo> = () => {
 }
 
 /**
- * 获取token信息
+ * 修改token信息
  * @returns 响应结果 
  */
 export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (data) => {
@@ -197,9 +198,9 @@ export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (
  * 获取排放标准信息
  * @returns 响应结果 
  */
-export const getEmisssionList: () => Promise<RequestDto> = () => {
+export const getGarbageInfoList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
-        await client.get('/config/emission/list')
+        await client.get('/config/garbage/list')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -214,9 +215,9 @@ export const getEmisssionList: () => Promise<RequestDto> = () => {
  * 修改排放标准信息
  * @returns 响应结果 
  */
-export const modifyEmission: (data: { id: number, standard: string }) => Promise<RequestDto> = (data) => {
+export const modifyGarbage: (data: { id: number, standard: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post('/config/emission', data)
+        await client.post('/config/garbage', data)
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);

@@ -1,10 +1,10 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
-import { Input, InputNumber, Table, message } from 'antd'
-import { getEmisssionList, modifyEmission } from "@/services"
+import { InputNumber, Table, message } from 'antd'
+import { getGarbageInfoList, modifyGarbage } from "@/services"
 import styles from './index.module.less'
 
-const EmissionStandardModule: React.FC = () => {
+const GarbageInfoModule: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [emissionList, setEmissionList] = useState<Emission[]>()
     const columns = useMemo<ColumnsType<any>>(() => {
@@ -35,7 +35,7 @@ const EmissionStandardModule: React.FC = () => {
                 render: (_, record) => {
                     return (
                         <div className={styles.input}>
-                            <InputNumber defaultValue={record.standard} min={0} onBlur={(e) => handleModifyEmission(e, record.id)} />
+                            <InputNumber defaultValue={record.standard} min={0} onBlur={(e) => handleModifyGarbage(e, record.id)} />
                         </div>)
                 }
             },
@@ -48,10 +48,10 @@ const EmissionStandardModule: React.FC = () => {
         ]
     }, [])
 
-    const handleModifyEmission = (e: any, id: number) => {
+    const handleModifyGarbage = (e: any, id: number) => {
         // 缓存一下
         e.persist()
-        modifyEmission({
+        modifyGarbage({
             standard: e.target.value,
             id: id
         }).then(res => {
@@ -62,8 +62,8 @@ const EmissionStandardModule: React.FC = () => {
         })
     }
 
-    const handleGetEmissionList = () => {
-        getEmisssionList()
+    const handleGetGarbageInfoList = () => {
+        getGarbageInfoList()
             .then(req => {
                 setEmissionList(req.data)
                 setLoading(false)
@@ -74,7 +74,7 @@ const EmissionStandardModule: React.FC = () => {
     }
 
     useEffect(() => {
-        loading && handleGetEmissionList()
+        loading && handleGetGarbageInfoList()
     }, [loading])
 
     return (
@@ -89,4 +89,4 @@ const EmissionStandardModule: React.FC = () => {
     )
 }
 
-export default EmissionStandardModule
+export default GarbageInfoModule

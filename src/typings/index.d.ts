@@ -17,7 +17,7 @@ interface RequestDto {
   total?: number
 }
 
-interface MpInfo {
+interface Mp {
   id: number;
   mpId: string;
   mpName: string;
@@ -27,7 +27,7 @@ interface MpInfo {
   gmtModified: string;
 }
 
-interface UserInfo {
+interface User {
   id: number
   project: string
   username: string
@@ -37,19 +37,19 @@ interface UserInfo {
   phone: string
 }
 
-interface AuthInfo {
+interface Auth {
   id: number
   phone: string
   project: string
 }
 
-interface TokenInfo {
+interface Token {
   id: number
   tokenId: string
   gmtCreate: string
 }
 
-interface Emission {
+interface Pollutant {
   id: number
   code: string
   name: string

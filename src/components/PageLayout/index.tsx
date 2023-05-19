@@ -10,7 +10,7 @@ import modify from '@/assets/svg/modify.svg';
 import person from '@/assets/svg/person.svg';
 import { Client } from '@/utils';
 import { Footer } from 'antd/es/layout/layout';
-import { getUserInfo } from '@/services';
+import { getUser } from '@/services';
 import * as Icon from "@ant-design/icons";
 import {
   MenuFoldOutlined,
@@ -29,7 +29,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
   const [openKeys, setOpenKeys] = useState<any[]>([])
   const [avatar, setAvatar] = useState('wa')
   const [collapsed, setCollapsed] = useState(false)
-  const [userInfo, setUserInfo] = useState<UserInfo>()
+  const [userInfo, setUserInfo] = useState<User>()
   const [type, setType] = useState<number>()
   const {
     token: { colorBgContainer },
@@ -44,7 +44,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
   }
 
   const handleGetUserInfo = () => {
-    getUserInfo()
+    getUser()
       .then((res: any) => {
         setUserInfo({ ...res })
         setAvatar('')

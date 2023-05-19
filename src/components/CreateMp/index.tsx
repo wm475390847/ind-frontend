@@ -1,18 +1,18 @@
 import { Button, Form, Input, Modal, message } from "antd"
 import styles from './index.module.less'
 
-type CreateMpInfoModuleProps = {
+type CreateMpModuleProps = {
     open: boolean
-    mpInfoList: MpInfo[]
+    mpInfoList: Mp[]
     onCancel?: () => void
-    onCerateSuccess: (mpInfo: MpInfo) => void
+    onCerateSuccess: (mpInfo: Mp) => void
 }
 /**
  * 创建排放口
  * @param props 参数
  * @returns 
  */
-export const CreateMpInfpModule: React.FC<CreateMpInfoModuleProps> = (props) => {
+export const CreateMpModule: React.FC<CreateMpModuleProps> = (props) => {
     const { open, mpInfoList, onCancel, onCerateSuccess } = (props)
     const [form] = Form.useForm()
 
@@ -55,4 +55,4 @@ export const CreateMpInfpModule: React.FC<CreateMpInfoModuleProps> = (props) => 
         </Modal >
     )
 }
-export default CreateMpInfpModule
+export default CreateMpModule

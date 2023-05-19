@@ -18,9 +18,7 @@ const LoginPage: React.FC = () => {
                     message.success(res.message)
                     navigate('/app/user')
                 })
-                .catch(err => {
-                    message.error(err.message)
-                })
+                .catch(err => message.error(err.message))
                 .finally(() => setButtonLoading(false))
         })
     }

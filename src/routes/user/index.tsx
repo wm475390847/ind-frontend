@@ -15,9 +15,9 @@ const UserPage: React.FC = () => {
     const [pageSize, setPageSize] = useState(10)
     const [total, setTotal] = useState(0)
 
-    const [userList, setUserList] = useState<UserInfo[]>()
+    const [userList, setUserList] = useState<User[]>()
     const [type, setType] = useState<number>()
-    const [userInfo, setUserInfo] = useState<UserInfo>()
+    const [userInfo, setUserInfo] = useState<User>()
 
 
     const columns = useMemo<ColumnsType<any>>(() => {
@@ -103,7 +103,8 @@ const UserPage: React.FC = () => {
             .then(res => {
                 message.success(res.message)
                 setLoading(true)
-            }).catch(err => message.error(err.message))
+            })
+            .catch(err => message.error(err.message))
             .finally(() => setButtongLoading(false))
     }
 

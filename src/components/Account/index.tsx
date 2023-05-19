@@ -2,12 +2,12 @@ import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useEffect, useState } from "react";
 import { PROJECT, UserTypeList } from "@/constants";
 import styles from './index.module.less'
-import { addUser, modifyAuthPassword, modifyUserInfo, resetPassword } from "@/services";
+import { addUser, modifyAuthPassword, modifyUser, resetPassword } from "@/services";
 import moment from "moment";
 
 type AccountModuleProps = {
     type?: number
-    userInfo?: UserInfo
+    userInfo?: User
     onCancel?: () => void
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -61,7 +61,7 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
             }
             if (type === 2) {
                 setButtonLoading(true)
-                modifyUserInfo({
+                modifyUser({
                     ...values,
                     id: userInfo?.id,
                     type: patseType(values.type)

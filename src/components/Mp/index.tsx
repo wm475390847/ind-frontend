@@ -3,16 +3,16 @@ import { useEffect, useMemo, useState } from "react"
 import { Table } from 'antd'
 import moment from "moment"
 
-type MpInfoModuleProps = {
-    mpInfoList: MpInfo[]
+type MpModuleProps = {
+    mpList: Mp[]
 }
 
-const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
-    const { mpInfoList } = props
-    const [dataSource, serDataSource] = useState<MpInfo[]>()
+const MpModule: React.FC<MpModuleProps> = (props) => {
+    const { mpList } = props
+    const [dataSource, serDataSource] = useState<Mp[]>()
 
-    const handleModifyMpInfoList = () => {
-        serDataSource(mpInfoList.map(e => ({ ...e, unit: "毫克每立方米" })))
+    const handleModifyMpList = () => {
+        serDataSource(mpList.map(e => ({ ...e, unit: "毫克每立方米" })))
     }
 
     const columns = useMemo<ColumnsType<any>>(() => {
@@ -58,8 +58,8 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
     }, [])
 
     useEffect(() => {
-        mpInfoList && handleModifyMpInfoList()
-    }, [mpInfoList])
+        mpList && handleModifyMpList()
+    }, [mpList])
 
     return (
         <Table
@@ -72,4 +72,4 @@ const MpInfoModule: React.FC<MpInfoModuleProps> = (props) => {
     )
 }
 
-export default MpInfoModule
+export default MpModule

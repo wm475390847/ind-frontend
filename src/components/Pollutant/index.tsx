@@ -1,12 +1,12 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
 import { InputNumber, Table, message } from 'antd'
-import { getGarbageInfoList, modifyGarbage } from "@/services"
+import { getPollutantInfoList as getPollutantList, modifyPollutant } from "@/services"
 import styles from './index.module.less'
 
-const GarbageInfoModule: React.FC = () => {
+const PollutantModule: React.FC = () => {
     const [loading, setLoading] = useState(true)
-    const [emissionList, setEmissionList] = useState<Emission[]>()
+    const [emissionList, setEmissionList] = useState<Pollutant[]>()
     const columns = useMemo<ColumnsType<any>>(() => {
         return [
             {
@@ -35,7 +35,7 @@ const GarbageInfoModule: React.FC = () => {
                 render: (_, record) => {
                     return (
                         <div className={styles.input}>
-                            <InputNumber defaultValue={record.standard} min={0} onBlur={(e) => handleModifyGarbage(e, record.id)} />
+                            <InputNumber defaultValue={record.standard} min={0} onBlur={(e) => handleModifyPollutant(e, record.id)} />
                         </div>)
                 }
             },
@@ -48,10 +48,10 @@ const GarbageInfoModule: React.FC = () => {
         ]
     }, [])
 
-    const handleModifyGarbage = (e: any, id: number) => {
+    const handleModifyPollutant = (e: any, id: number) => {
         // 缓存一下
         e.persist()
-        modifyGarbage({
+        modifyPollutant({
             standard: e.target.value,
             id: id
         }).then(res => {
@@ -62,8 +62,8 @@ const GarbageInfoModule: React.FC = () => {
         })
     }
 
-    const handleGetGarbageInfoList = () => {
-        getGarbageInfoList()
+    const handleGetPollutantList = () => {
+        getPollutantList()
             .then(req => {
                 setEmissionList(req.data)
                 setLoading(false)
@@ -74,7 +74,7 @@ const GarbageInfoModule: React.FC = () => {
     }
 
     useEffect(() => {
-        loading && handleGetGarbageInfoList()
+        loading && handleGetPollutantList()
     }, [loading])
 
     return (
@@ -89,4 +89,4 @@ const GarbageInfoModule: React.FC = () => {
     )
 }
 
-export default GarbageInfoModule
+export default PollutantModule

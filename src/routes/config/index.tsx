@@ -1,19 +1,19 @@
 import { Button, Form, Input, Modal, Space, Tabs, message } from 'antd';
 import styles from './index.module.less';
 import { useEffect, useRef, useState } from 'react';
-import CreateMpInfpModule from '@/components/CreateMpInfo';
-import MpModule from '@/components/MpMap';
+import CreateMpModule from '@/components/CreateMp';
+import MpMapModule from '@/components/MpMap';
 import moment from 'moment';
-import { addMpInfoList, getMpInfoList, getTokenInfo, modifyToken } from '@/services';
-import GarbageInfoModule from '@/components/GarbageInfo';
-import MpInfoModule from '@/components/MpInfo';
+import { addMpList, getMpList, getTokenInfo, modifyToken } from '@/services';
+import PollutantModule from '@/components/Pollutant';
+import MpModule from '@/components/Mp';
 
 const ConfigPage: React.FC = () => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [mpInfoList, setMpInfoList] = useState<MpInfo[]>([])
-    const [tabKey, setTabKry] = useState('A')
-    const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
+    const [mpList, setMpList] = useState<Mp[]>([])
+    const [tabKey, setTabKey] = useState('A')
+    const [tokenInfo, setTokenInfo] = useState<Token>()
     const [tokenButtonLoading, setTokenButtonLoading] = useState(false)
     const [saveButtonLoading, setSaveButtonLoading] = useState(false)
     const [form] = Form.useForm()
@@ -26,89 +26,83 @@ const ConfigPage: React.FC = () => {
     ];
 
     const onTabsChange = (key: string) => {
-        setTabKry(key)
+        setTabKey(key)
     };
 
     /**
      * 获取token列表
      */
-    const handleGetTokenInfo = () => {
+    const handleGetToken = () => {
         getTokenInfo()
             .then(res => {
                 setTokenInfo(res)
                 setLoading(false)
             })
-            .catch(err => {
-                message.error(err.message)
-            })
+            .catch(err => message.error(err.message))
     }
 
     /**
      * 修改token
      */
     const handleModifyToken = () => {
-        form.validateFields().then(valus => {
-            setTokenButtonLoading(true)
-            modifyToken({ ...valus })
-                .then(res => {
-                    message.success(res.message)
-                    setLoading(true)
-                })
-                .catch(err => {
-                    message.error(err.message)
-                })
-                .finally(() => setTokenButtonLoading(false))
-        })
+        form.validateFields()
+            .then(valus => {
+                setTokenButtonLoading(true)
+                modifyToken({ ...valus })
+                    .then(res => {
+                        message.success(res.message)
+                        setLoading(true)
+                    })
+                    .catch(err => message.error(err.message))
+                    .finally(() => setTokenButtonLoading(false))
+            })
     }
 
     /**
      * 获取排放口列表
      */
-    const handleGetMpInfoList = () => {
-        getMpInfoList()
+    const handleGetMpList = () => {
+        getMpList()
             .then(res => {
-                setMpInfoList(res.data)
+                setMpList(res.data)
                 setLoading(false)
             })
-            .catch(err => {
-                message.error(err.message)
-            })
+            .catch(err => message.error(err.message))
     }
 
     /**
      * 保存排放口列表
      */
-    const handleAddMapInfoList = () => {
-        addMpInfoList(mpInfoList)
+    const handleAddMapList = () => {
+        addMpList(mpList)
             .then(res => {
                 setSaveButtonLoading(true)
                 message.success(res.message)
                 setLoading(true)
             })
-            .catch(err => {
-                message.error(err.message)
-            }).finally(() => setSaveButtonLoading(false))
+            .catch(err => message.error(err.message))
+            .finally(() => setSaveButtonLoading(false))
     }
 
     useEffect(() => {
         if (loading && tabKey === 'A') {
-            handleGetMpInfoList()
+            handleGetMpList()
         }
         if (loading && tabKey === 'D') {
-            handleGetTokenInfo()
+            handleGetToken()
         }
     }, [loading, tabKey])
 
 
     useEffect(() => {
         if (tabKey === 'A') {
-            handleGetMpInfoList()
+            handleGetMpList()
         }
         if (tabKey === 'D') {
-            handleGetTokenInfo()
+            handleGetToken()
         }
         if (tabKey === 'C') {
-            handleGetMpInfoList()
+            handleGetMpList()
         }
     }, [tabKey])
 
@@ -129,22 +123,22 @@ const ConfigPage: React.FC = () => {
                     </div>
 
                     {/* 循环添加组件，也可以点击减号删除，主要看list的内容 */}
-                    <MpModule mpInfoList={mpInfoList} currentMpInfoList={newMpInfoList => setMpInfoList(newMpInfoList)} />
+                    <MpMapModule mpList={mpList} currentMpList={newMpList => setMpList(newMpList)} />
 
                     <div className={styles.buttonGroup}>
                         <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
-                        <Button type='primary' onClick={() => handleAddMapInfoList()} loading={saveButtonLoading}>保存</Button>
+                        <Button type='primary' onClick={() => handleAddMapList()} loading={saveButtonLoading}>保存</Button>
                     </div>
-                    <CreateMpInfpModule open={open} mpInfoList={mpInfoList} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpInfoList([...mpInfoList, mpInfo])} />
+                    <CreateMpModule open={open} mpInfoList={mpList} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpList([...mpList, mpInfo])} />
                 </div>
             }
 
             {tabKey === 'B' &&
-                <GarbageInfoModule />
+                <PollutantModule />
             }
 
             {tabKey === 'C' &&
-                <MpInfoModule mpInfoList={mpInfoList} />
+                <MpModule mpList={mpList} />
             }
 
             {tabKey === 'D' && tokenInfo &&

@@ -25,7 +25,7 @@ export const modifyAuthPassword: (data: { password: string, newPassword: string 
  * 用户列表接口
  * @returns 响应结果 
  */
-export const getUserList: (data: SelectUserReq) => Promise<IPageRequest<UserInfo>> = (data) => {
+export const getUserList: (data: SelectUserReq) => Promise<IPageRequest<User>> = (data) => {
     return new Promise(async (resolve, reject) => {
         await client.get('/user/list', data)
             .then((res: any) => {
@@ -42,7 +42,7 @@ export const getUserList: (data: SelectUserReq) => Promise<IPageRequest<UserInfo
  * 用户列表接口
  * @returns 响应结果 
  */
-export const getUserInfo: () => Promise<UserInfo> = () => {
+export const getUser: () => Promise<User> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/user/info')
             .then((res: any) => {
@@ -91,6 +91,23 @@ export const addUser: (data: CreateUserReq) => Promise<RequestDto> = (data) => {
 }
 
 /**
+ * 修改用户信息
+ * @returns 响应结果 
+ */
+export const modifyUser: (data: User) => Promise<RequestDto> = (data) => {
+    return new Promise(async (resolve, reject) => {
+        await client.post('/user/modify', data)
+            .then((res: any) => {
+                if (res.success) {
+                    resolve(res);
+                } else {
+                    reject(res);
+                }
+            })
+    });
+}
+
+/**
  * 重置密码
  * @returns 响应结果 
  */
@@ -108,27 +125,10 @@ export const resetPassword: (data: { id: number, password: string }) => Promise<
 }
 
 /**
- * 修改用户信息
- * @returns 响应结果 
- */
-export const modifyUserInfo: (data: UserInfo) => Promise<RequestDto> = (data) => {
-    return new Promise(async (resolve, reject) => {
-        await client.post('/user/modify', data)
-            .then((res: any) => {
-                if (res.success) {
-                    resolve(res);
-                } else {
-                    reject(res);
-                }
-            })
-    });
-}
-
-/**
  * 添加mp
  * @returns 响应结果 
  */
-export const addMpInfoList: (data: MpInfo[]) => Promise<RequestDto> = (data) => {
+export const addMpList: (data: Mp[]) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
         await client.post('/config/mp', data)
             .then((res: any) => {
@@ -146,7 +146,7 @@ export const addMpInfoList: (data: MpInfo[]) => Promise<RequestDto> = (data) => 
  * 获取mp列表
  * @returns 响应结果 
  */
-export const getMpInfoList: () => Promise<RequestDto> = () => {
+export const getMpList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/config/mp')
             .then((res: any) => {
@@ -164,7 +164,7 @@ export const getMpInfoList: () => Promise<RequestDto> = () => {
  * 获取token信息
  * @returns 响应结果 
  */
-export const getTokenInfo: () => Promise<TokenInfo> = () => {
+export const getTokenInfo: () => Promise<Token> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/config/token')
             .then((res: any) => {
@@ -198,9 +198,9 @@ export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (
  * 获取排放标准信息
  * @returns 响应结果 
  */
-export const getGarbageInfoList: () => Promise<RequestDto> = () => {
+export const getPollutantInfoList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
-        await client.get('/config/garbage/list')
+        await client.get('/config/pollutant/list')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -215,9 +215,9 @@ export const getGarbageInfoList: () => Promise<RequestDto> = () => {
  * 修改排放标准信息
  * @returns 响应结果 
  */
-export const modifyGarbage: (data: { id: number, standard: string }) => Promise<RequestDto> = (data) => {
+export const modifyPollutant: (data: { id: number, standard: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
-        await client.post('/config/garbage', data)
+        await client.post('/config/pollutant', data)
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);

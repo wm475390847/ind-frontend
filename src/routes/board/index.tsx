@@ -114,7 +114,7 @@ const DataBoard: React.FC = () => {
                     </tr>
                     <tr>
                         <td colSpan={2} rowSpan={5}>{shiftValue == null ? '暂无数据' : JSON.stringify(shiftValue)}</td>
-                        <td colSpan={2} rowSpan={5}>草泥马</td>
+                        <td colSpan={2} rowSpan={5} className={styles.td3}>草泥马</td>
                         <td className={styles.td4}>今日班组排放均值</td>
                     </tr>
                     <tr>

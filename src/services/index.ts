@@ -164,7 +164,7 @@ export const getMpList: () => Promise<RequestDto> = () => {
  * 获取token信息
  * @returns 响应结果 
  */
-export const getTokenInfo: () => Promise<Token> = () => {
+export const getToken: () => Promise<Token> = () => {
     return new Promise(async (resolve, reject) => {
         await client.get('/config/token')
             .then((res: any) => {
@@ -198,9 +198,9 @@ export const modifyToken: (data: { tokenId: string }) => Promise<RequestDto> = (
  * 获取排放标准信息
  * @returns 响应结果 
  */
-export const getPollutantInfoList: () => Promise<RequestDto> = () => {
+export const getPollutantList: () => Promise<RequestDto> = () => {
     return new Promise(async (resolve, reject) => {
-        await client.get('/config/pollutant/list')
+        await client.get('/config/pollutant')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);
@@ -218,6 +218,23 @@ export const getPollutantInfoList: () => Promise<RequestDto> = () => {
 export const modifyPollutant: (data: { id: number, standard: string }) => Promise<RequestDto> = (data) => {
     return new Promise(async (resolve, reject) => {
         await client.post('/config/pollutant', data)
+            .then((res: any) => {
+                if (res.success) {
+                    resolve(res);
+                } else {
+                    reject(res);
+                }
+            })
+    });
+}
+
+/**
+ * 获取排放数据
+ * @returns 响应结果 
+ */
+export const getAvgData: () => Promise<RequestDto> = () => {
+    return new Promise(async (resolve, reject) => {
+        await client.get('/data/avg')
             .then((res: any) => {
                 if (res.success) {
                     resolve(res);

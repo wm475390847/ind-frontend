@@ -28,10 +28,14 @@ export const PageTitle = {
   home: '主页',
   user: '用户管理',
   config: '系统配置',
-  forecast: '小时排放预测',
+  board: '小时排放预测',
 };
 
 export const UserTypeList = [
   "管理员",
   "普通员工",
+]
+
+export const GroupIdList = [
+  "甲", "乙", "丙", "丁"
 ]

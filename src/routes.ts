@@ -1,7 +1,7 @@
 import { PageTitle } from '@/constants';
 import UserPage from './routes/user';
 import ConfigPage from './routes/config';
-import Execl from './routes/excel';
+import DataBoard from './routes/board';
 
 export interface RouteBase {
   name: string;
@@ -15,9 +15,9 @@ export interface RouteBase {
 
 const routes: RouteBase[] = [
   {
-    name: PageTitle.forecast,
-    path: '/app/forecast',
-    element: Execl,
+    name: PageTitle.board,
+    path: '/app/board',
+    element: DataBoard,
     icon: "AlertOutlined",
     children: [],
   },

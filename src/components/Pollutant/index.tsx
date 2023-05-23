@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/lib/table"
 import { useEffect, useMemo, useState } from "react"
 import { InputNumber, Table, message } from 'antd'
-import { getPollutantInfoList as getPollutantList, modifyPollutant } from "@/services"
+import { getPollutantList as getPollutantList, modifyPollutant } from "@/services"
 import styles from './index.module.less'
 
 const PollutantModule: React.FC = () => {

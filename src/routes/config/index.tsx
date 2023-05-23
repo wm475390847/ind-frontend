@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import CreateMpModule from '@/components/CreateMp';
 import MpMapModule from '@/components/MpMap';
 import moment from 'moment';
-import { addMpList, getMpList, getTokenInfo, modifyToken } from '@/services';
+import { addMpList, getMpList, getToken, modifyToken } from '@/services';
 import PollutantModule from '@/components/Pollutant';
 import MpModule from '@/components/Mp';
 
@@ -33,7 +33,7 @@ const ConfigPage: React.FC = () => {
      * 获取token列表
      */
     const handleGetToken = () => {
-        getTokenInfo()
+        getToken()
             .then(res => {
                 setTokenInfo(res)
                 setLoading(false)

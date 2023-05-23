@@ -78,3 +78,17 @@ interface CreateUserReq {
   password: string
   type: number
 }
+
+
+
+interface GroupHourAvg {
+  mpName: string
+  mpId: string
+  value: object
+}
+
+interface ShiftHourAvg {
+  mpName: string
+  mpId: string
+  value: object
+}

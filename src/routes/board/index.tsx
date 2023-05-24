@@ -1,11 +1,13 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import React, { useEffect, useState } from "react";
 import styles from './index.module.less'
-import { getMpList, getPollutantList, getAvgData } from "@/services";
+import { getMpList, getPollutantList, getAvgData, execute } from "@/services";
 import { GroupIdList } from "@/constants";
 
 const DataBoard: React.FC = () => {
     const [loading, setLoading] = useState(true)
+    const [buttonLoading, setButtongLoading] = useState(false)
+
     const [groupHourAvg, setGroupHourAvg] = useState<GroupHourAvg[]>([])
     const [shiftHourAvg, setShiftHourAvg] = useState<ShiftHourAvg[]>([])
     const [shiftObject, setShiftObj] = useState<any>()
@@ -19,9 +21,8 @@ const DataBoard: React.FC = () => {
     const [mp, setMp] = useState<Mp>()
     const [pollutant, setPollutant] = useState<Pollutant>()
 
-    // 操作排放口索引
+    // 操作排放口索引、操作污染物索引
     const [activeMpIndex, setActiveMpIndex] = useState(0);
-    // 操作污染物索引
     const [activePollutantIndex, setActivePollutantIndex] = useState(0);
 
     /**
@@ -73,25 +74,22 @@ const DataBoard: React.FC = () => {
             if (groupId in groupObject) {
                 return groupObject[groupId]
             }
+            return 0
         }
         return 0;
     }
 
     /**
-     * 获取当前班次排放均值
+     * 处理当前班次均值，排序
      * @returns 排放均值
      */
-    const handleShiftValue = () => {
-        const entries = Object.entries(shiftObject); // 获取所有属性键值对
-        entries.sort(([keyA], [keyB]) => keyA.localeCompare(keyB, 'zh-Hans-CN')); // 按照键的大小顺序排序
-        let result = ''; // 用于保存所有属性名和属性值拼接成的字符串
-        entries.forEach(([key, value]) => {
-            // const spaces = new Array(20 - key.length).fill(' ').join(' ');
-            // 拼接当前属性名和属性值，并添加一个换行符
-            result += `${key}时${value}mg/m³</br>`;
-        });
-        return result;
-    };
+    const handleParseShiftAvg = () => {
+        if (shiftObject) {
+            const entries = Object.entries(shiftObject); // 获取所有属性键值对
+            entries.sort(([keyA], [keyB]) => keyA.localeCompare(keyB, 'zh-Hans-CN')); // 按照键的大小顺序排序
+            return entries;
+        }
+    }
 
     /**
      * 获取平均数据
@@ -137,6 +135,18 @@ const DataBoard: React.FC = () => {
     };
 
     /**
+     * 重新执行数据计算
+     */
+    const handleResetData = () => {
+        setButtongLoading(true)
+        execute().then(res => {
+            message.success(res.message)
+            setLoading(false)
+        }).catch(err => message.error(err.message))
+            .finally(() => setButtongLoading(false))
+    }
+
+    /**
      * 监听页面是否刷新，如果重新加载了则调用所有接口
      */
     useEffect(() => {
@@ -157,10 +167,10 @@ const DataBoard: React.FC = () => {
      * 监听一下按钮的变化，然后获取对应的班次数据
      */
     useEffect(() => {
-        mp && pollutant &&
+        if (mp && pollutant) {
             setShiftObj(handleGetShiftObj(mp.mpId, pollutant.code))
-        mp && pollutant &&
             setGroupObj(handleGetGroupObj(mp.mpId, pollutant.code))
+        }
     }, [mp, pollutant])
 
     return (
@@ -172,9 +182,15 @@ const DataBoard: React.FC = () => {
                             <td className={styles.td1} colSpan={5}>小时排放预测（{mp?.mpName}）</td>
                         </tr>
                         <tr>
-                            <td className={styles.td2} colSpan={2} rowSpan={5}>
-                                {shiftObject == null ? '暂无数据' :
-                                    <div dangerouslySetInnerHTML={{ __html: handleShiftValue() }} />
+                            <td className={styles.td2} style={{ fontSize: '15px' }} colSpan={2} rowSpan={5}>{ }
+                                {shiftObject === null ? '暂无数据' : handleParseShiftAvg() &&
+                                    (handleParseShiftAvg() as [string, number][]).map(([key, value]) => (
+                                        <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ marginLeft: '30px', fontVariantNumeric: 'tabular-nums' }}>{key}时</div>
+                                            <div >{value}</div>
+                                            <div style={{ marginRight: '30px' }}>mg/m³</div>
+                                        </div>
+                                    ))
                                 }
                             </td>
                             <td className={styles.td3} colSpan={2} rowSpan={5}>草泥马</td>
@@ -201,7 +217,7 @@ const DataBoard: React.FC = () => {
                         </tr>
                         <tr>
                             <td className={styles.td6} style={{ fontSize: '20px' }}>{60 - new Date().getMinutes()} min</td>
-                            <td className={styles.td6}>第八行，第二列</td>
+                            <td className={styles.td6} style={{ fontSize: '20px' }}>{mp.o2StandardAvg}</td>
                             <td className={styles.td7}>第八行，第三列</td>
                             <td className={styles.td7}>第八行，第四列</td>
                             <td className={styles.td8}>第八行，第五列</td>
@@ -236,7 +252,7 @@ const DataBoard: React.FC = () => {
             </div>
 
             <div className={styles.updateButton}>
-                <Button type="primary">更新数据</Button>
+                <Button type="primary" onClick={() => handleResetData()} loading={buttonLoading}>更新数据</Button>
             </div>
 
         </div >

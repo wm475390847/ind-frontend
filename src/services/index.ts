@@ -244,3 +244,20 @@ export const getAvgData: () => Promise<RequestDto> = () => {
             })
     });
 }
+
+/**
+ * 获取排放数据
+ * @returns 响应结果 
+ */
+export const execute: () => Promise<RequestDto> = () => {
+    return new Promise(async (resolve, reject) => {
+        await client.post('/data/execute')
+            .then((res: any) => {
+                if (res.success) {
+                    resolve(res);
+                } else {
+                    reject(res);
+                }
+            })
+    });
+}

@@ -10,7 +10,7 @@ import MpModule from '@/components/Mp';
 
 const ConfigPage: React.FC = () => {
     const [open, setOpen] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [mpList, setMpList] = useState<Mp[]>([])
     const [tabKey, setTabKey] = useState('A')
     const [tokenInfo, setTokenInfo] = useState<Token>()
@@ -85,14 +85,15 @@ const ConfigPage: React.FC = () => {
     }
 
     useEffect(() => {
-        if (loading && tabKey === 'A') {
-            handleGetMpList()
-        }
-        if (loading && tabKey === 'D') {
-            handleGetToken()
+        if (loading) {
+            if (tabKey === 'A') {
+                handleGetMpList()
+            }
+            if (tabKey === 'D') {
+                handleGetToken()
+            }
         }
     }, [loading, tabKey])
-
 
     useEffect(() => {
         if (tabKey === 'A') {

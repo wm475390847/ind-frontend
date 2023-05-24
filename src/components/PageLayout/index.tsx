@@ -17,6 +17,7 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import AccountModule from '../Account';
+import { setItem } from '@/utils/Storage';
 
 type PageLayoutModuleProp = {
   children?: ReactElement | ReactElement[];
@@ -48,6 +49,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
       .then((res: any) => {
         setUserInfo({ ...res })
         setAvatar('')
+        setItem(Client.USER_TYPE, res.type)
       })
       .catch((errObj: any) => {
         message.error(errObj.message);

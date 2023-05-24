@@ -11,16 +11,12 @@ export class Client {
      * 存在本地缓存中的key
      */
     public static TOKEN_IDENTIFIER: string = 'ind.token';
+    public static USER_TYPE: string = 'user.type';
 
     /**
      * 服务端的token
      */
     protected _token!: string;
-
-    /**
-     * 用户信息
-     */
-    protected _userInfo!: any;
 
     /**
      * 请求工具
@@ -117,7 +113,8 @@ export class Client {
                 // 请空本地缓存token及浏览器缓存
                 this._token = '';
                 removeItem(Client.TOKEN_IDENTIFIER);
-                resolve(this._userInfo);
+                removeItem(Client.USER_TYPE);
+                resolve(res);
             } else {
                 reject(res)
             }
@@ -134,8 +131,8 @@ export class Client {
             const res: any = await this.post(`/auth/login`, { ...data, project: PROJECT, password: md5(data.password + KEY) });
             if (res?.code === '200') {
                 this._token = res.data.token;
-                this._userInfo = res.data
                 setItem(Client.TOKEN_IDENTIFIER, this._token);
+                setItem(Client.USER_TYPE, res.data.type)
                 resolve(res);
             } else {
                 reject(res)

@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
                 .login({ ...values, password: values.password })
                 .then(res => {
                     message.success(res.message)
-                    navigate('/app/user')
+                    navigate('/app/board')
                 })
                 .catch(err => message.error(err.message))
                 .finally(() => setButtonLoading(false))

@@ -32,7 +32,7 @@ interface User {
   project: string
   username: string
   department: string
-  type: number
+  roleId: number
   gmtCreate: string
   phone: string
 }
@@ -76,7 +76,7 @@ interface CreateUserReq {
   department: string
   phone: string
   password: string
-  type: number
+  roleId: number
 }
 
 

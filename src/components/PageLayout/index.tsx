@@ -10,14 +10,13 @@ import modify from '@/assets/svg/modify.svg';
 import person from '@/assets/svg/person.svg';
 import { Client } from '@/utils';
 import { Footer } from 'antd/es/layout/layout';
-import { getUser } from '@/services';
 import * as Icon from "@ant-design/icons";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import AccountModule from '../Account';
-import { getItem, setItem } from '@/utils/Storage';
+import PopupModule from '../Popup';
+import { getItem } from '@/utils/Storage';
 
 type PageLayoutModuleProp = {
   children?: ReactElement | ReactElement[];
@@ -175,7 +174,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
         </Layout>
       </Layout>
-      <AccountModule type={type} userInfo={userInfo} onCancel={() => setType(undefined)} setLoading={() => undefined} />
+      <PopupModule type={type} user={userInfo} onCancel={() => setType(undefined)} setLoading={() => undefined} />
     </>
   );
 };

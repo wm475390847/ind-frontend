@@ -1,15 +1,15 @@
-import { Button, Form, Input, Modal, Space, Tabs, message } from 'antd';
+import { Button, Form, Input, Tabs, message } from 'antd';
 import styles from './index.module.less';
-import { useEffect, useRef, useState } from 'react';
-import CreateMpModule from '@/components/CreateMp';
+import { useEffect, useState } from 'react';
 import MpMapModule from '@/components/MpMap';
 import moment from 'moment';
 import { addMpList, getMpList, getToken, modifyToken } from '@/services';
-import PollutantModule from '@/components/Pollutant';
-import MpModule from '@/components/Mp';
+import PollutantTableModule from '@/components/PollutantTable';
+import MpTableModule from '@/components/MpTable';
+import PopupModule from '@/components/Popup';
 
 const ConfigPage: React.FC = () => {
-    const [open, setOpen] = useState(false)
+    const [type, setType] = useState<number>()
     const [loading, setLoading] = useState(false)
     const [mpList, setMpList] = useState<Mp[]>([])
     const [tabKey, setTabKey] = useState('A')
@@ -73,7 +73,7 @@ const ConfigPage: React.FC = () => {
     /**
      * 保存排放口列表
      */
-    const handleAddMapList = () => {
+    const handleAddMpList = () => {
         addMpList(mpList)
             .then(res => {
                 setSaveButtonLoading(true)
@@ -85,27 +85,13 @@ const ConfigPage: React.FC = () => {
     }
 
     useEffect(() => {
-        if (loading) {
-            if (tabKey === 'A') {
-                handleGetMpList()
-            }
-            if (tabKey === 'D') {
-                handleGetToken()
-            }
+        if (tabKey === 'A' || (loading && tabKey === 'C')) {
+            handleGetMpList()
+        } else if (tabKey === 'D' || (loading && tabKey !== 'C')) {
+            handleGetToken()
         }
     }, [loading, tabKey])
 
-    useEffect(() => {
-        if (tabKey === 'A') {
-            handleGetMpList()
-        }
-        if (tabKey === 'D') {
-            handleGetToken()
-        }
-        if (tabKey === 'C') {
-            handleGetMpList()
-        }
-    }, [tabKey])
 
     useEffect(() => {
         tokenInfo && form.setFieldsValue({
@@ -127,19 +113,19 @@ const ConfigPage: React.FC = () => {
                     <MpMapModule mpList={mpList} currentMpList={newMpList => setMpList(newMpList)} />
 
                     <div className={styles.buttonGroup}>
-                        <Button type='primary' onClick={() => setOpen(true)}>新增</Button>
-                        <Button type='primary' onClick={() => handleAddMapList()} loading={saveButtonLoading}>保存</Button>
+                        <Button type='primary' onClick={() => setType(6)}>新增</Button>
+                        <Button type='primary' onClick={() => handleAddMpList()} loading={saveButtonLoading}>保存</Button>
                     </div>
-                    <CreateMpModule open={open} mpInfoList={mpList} onCancel={() => setOpen(false)} onCerateSuccess={mpInfo => setMpList([...mpList, mpInfo])} />
+                    <PopupModule type={type} mpList={mpList} onCancel={() => setType(undefined)} onCerateSuccess={mp => setMpList([...mpList, mp])} setLoading={() => { undefined }} />
                 </div>
             }
 
             {tabKey === 'B' &&
-                <PollutantModule />
+                <PollutantTableModule />
             }
 
             {tabKey === 'C' &&
-                <MpModule mpList={mpList} />
+                <MpTableModule mpList={mpList} />
             }
 
             {tabKey === 'D' && tokenInfo &&

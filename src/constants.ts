@@ -31,7 +31,7 @@ export const PageTitle = {
   board: '小时排放预测',
 };
 
-export const UserTypeList = [
+export const UserRoleList = [
   "管理员",
   "普通员工",
 ]

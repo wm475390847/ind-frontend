@@ -1,24 +1,25 @@
 import { Button, Form, Input, Modal, Select, message } from "antd"
 import React, { useEffect, useState } from "react";
-import { PROJECT, UserTypeList } from "@/constants";
+import { PROJECT, UserRoleList } from "@/constants";
 import styles from './index.module.less'
 import { addUser, modifyAuthPassword, modifyUser, resetPassword } from "@/services";
 import moment from "moment";
 
 type AccountModuleProps = {
     type?: number
-    userInfo?: User
+    user?: User
+    mpList?: Mp[]
     onCancel?: () => void
+    onCerateSuccess?: (mp: Mp) => void
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 /**
- * 映射表
  * @param props 参数
  * @returns 
  */
-export const AccountModule: React.FC<AccountModuleProps> = (props) => {
-    const { type, userInfo, onCancel, setLoading } = (props)
+export const PopupModule: React.FC<AccountModuleProps> = (props) => {
+    const { type, user, onCancel, setLoading, mpList, onCerateSuccess } = (props)
     const [form] = Form.useForm()
     const [open, setOpen] = useState(false)
     const [buttonLoading, setButtonLoading] = useState(false)
@@ -28,12 +29,12 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
         onCancel && onCancel()
     }
 
-    const patseType = (value: string) => {
+    const parseRoleId = (value: string) => {
         return value === '管理员' ? 0 : 1
     }
 
     const options = () => {
-        return UserTypeList.map((item, index) => ({
+        return UserRoleList.map((item, index) => ({
             value: index,
             label: item
         }));
@@ -46,10 +47,10 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                     message.error("新密码两次填写不一致")
                     return
                 }
-                if (userInfo) {
+                if (user) {
                     setButtonLoading(true)
                     resetPassword({
-                        id: userInfo.id,
+                        id: user.id,
                         password: values.newPassword1
                     }).then(req => {
                         message.success(req.message)
@@ -63,8 +64,8 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                 setButtonLoading(true)
                 modifyUser({
                     ...values,
-                    id: userInfo?.id,
-                    type: patseType(values.type)
+                    id: user?.id,
+                    roleId: parseRoleId(values.roleId)
                 }).then(res => {
                     message.success(res.message)
                     setLoading(true)
@@ -82,7 +83,7 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                     project: PROJECT,
                     username: values.username,
                     department: values.department,
-                    type: values.type,
+                    roleId: values.roleId,
                     phone: values.phone,
                     password: values.newPassword1
                 })
@@ -108,6 +109,21 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                 }).catch(err => message.error(err.message))
                     .finally(() => setButtonLoading(false))
             }
+            if (type === 6) {
+                form.validateFields().then(values => {
+                    // 需要判断一下是否已经在list中
+                    if (mpList) {
+                        if (mpList.some((mp) => mp.mpId === values.mpId)) {
+                            message.error('排放口已存在')
+                            return
+                        }
+                        if (onCerateSuccess) {
+                            onCerateSuccess({ ...values })
+                        }
+                        handleCancel()
+                    }
+                })
+            }
         })
     }
 
@@ -116,16 +132,13 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
     }, [type])
 
     useEffect(() => {
-        if (open && type === 2 && userInfo) {
+        if (open && type === 2 && user) {
             setTimeout(() => {
                 form.setFieldsValue({
-                    username: userInfo.username,
-                    phone: userInfo.phone,
-                    department: userInfo.department,
-                    type: UserTypeList[userInfo.type],
-                    newPassword1: null,
-                    newPassword2: null,
-                    oldPassword: null
+                    username: user.username,
+                    phone: user.phone,
+                    department: user.department,
+                    roleId: UserRoleList[user.roleId],
                 })
             }, 500);
         }
@@ -134,7 +147,7 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
     return (
         <Modal
             open={open}
-            title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : type === 4 ? '用户信息' : type === 5 ? '修改密码' : '新增用户'}`}
+            title={`${type === 2 ? '编辑用户' : type === 3 ? '重置密码' : type === 4 ? '用户信息' : type === 5 ? '修改密码' : type === 6 ? '创建排放口' : '新增用户'}`}
             footer={<Button loading={buttonLoading} type='primary' onClick={onSubmit}>确定</Button>}
             destroyOnClose
             onCancel={handleCancel}
@@ -158,7 +171,7 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                         <Form.Item label='部门' name='department' rules={[{ required: true, message: "部门不能为空" }]}>
                             <Input placeholder="请填写员工部门" />
                         </Form.Item>
-                        <Form.Item label='账号类型' name='type' rules={[{ required: true, message: "账号类型不能为空" }]} initialValue={1}>
+                        <Form.Item label='账号类型' name='roleId' rules={[{ required: true, message: "账号类型不能为空" }]} initialValue={1}>
                             <Select className={styles.select} options={options()} />
                         </Form.Item>
                     </div>) : null
@@ -182,15 +195,27 @@ export const AccountModule: React.FC<AccountModuleProps> = (props) => {
                         </Form.Item>
                     </div>) : null}
 
-                {type === 4 && userInfo &&
+                {type === 4 && user &&
                     <div>
-                        <Form.Item label="姓名" >{userInfo?.username}</Form.Item>
-                        <Form.Item label="手机" >{userInfo?.phone}</Form.Item>
-                        <Form.Item label="部门" >{userInfo?.department}</Form.Item>
-                        <Form.Item label="创建时间" >{moment(userInfo?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</Form.Item>
+                        <Form.Item label="姓名" >{user?.username}</Form.Item>
+                        <Form.Item label="手机" >{user?.phone}</Form.Item>
+                        <Form.Item label="部门" >{user?.department}</Form.Item>
+                        <Form.Item label="创建时间" >{moment(user?.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}</Form.Item>
                     </div>
                 }
+
+                {type === 6 && mpList &&
+                    <div>
+                        <Form.Item name='mpId' label='排放口Id' rules={[{ required: true, message: '请输入排放口ID' }]} >
+                            <Input placeholder="请输入排放口ID" />
+                        </Form.Item>
+                        <Form.Item name='mpName' label='排放口名称' rules={[{ required: true, message: '请输入排放口名称' }]} >
+                            <Input placeholder="请输入排放口名称" />
+                        </Form.Item>
+                    </div>
+                }
+
             </Form >
         </Modal>);
 }
-export default AccountModule
+export default PopupModule

@@ -4,8 +4,8 @@ import { Button, Popconfirm, Table, message } from 'antd'
 import { deleteUser, getUserList } from "@/services"
 import styles from './index.module.less'
 import moment from "moment"
-import AccountModule from "@/components/Account"
-import { UserTypeList } from "@/constants"
+import PopupModule from "@/components/Popup"
+import { UserRoleList } from "@/constants"
 
 const UserPage: React.FC = () => {
     const [loading, setLoading] = useState(true)
@@ -54,10 +54,10 @@ const UserPage: React.FC = () => {
             },
             {
                 title: '用户类型',
-                dataIndex: 'type',
-                key: 'type',
+                dataIndex: 'roleId',
+                key: 'roleId',
                 width: '10%',
-                render: (type) => <div>{UserTypeList[type]}</div>
+                render: (type) => <div>{UserRoleList[type]}</div>
             },
             {
                 title: '操作',
@@ -71,7 +71,7 @@ const UserPage: React.FC = () => {
                             <Popconfirm title='确定删除？' placement="top" okText="是" cancelText="否" onConfirm={() => handleDeleteUser(record.id)}>
                                 <Button loading={buttonLoading}>删除</Button>
                             </Popconfirm>
-                            <Button onClick={() => { setType(3), setUserInfo(record) }}  >重置密码</Button>
+                            <Button onClick={() => { setType(3), setUserInfo(record) }}>重置密码</Button>
                         </div >
                     )
                 }
@@ -116,7 +116,7 @@ const UserPage: React.FC = () => {
         <div>
             <div className={styles.button}>
                 <Button type='primary' onClick={() => setType(1)}>新增用户</Button>
-                <AccountModule userInfo={userInfo} type={type} onCancel={() => setType(undefined)} setLoading={setLoading} />
+                <PopupModule user={userInfo} type={type} onCancel={() => setType(undefined)} setLoading={setLoading} />
             </div>
             <Table
                 className={styles.table}

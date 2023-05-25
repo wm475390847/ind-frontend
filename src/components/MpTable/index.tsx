@@ -7,12 +7,12 @@ type MpModuleProps = {
     mpList: Mp[]
 }
 
-const MpModule: React.FC<MpModuleProps> = (props) => {
+const MpTableModule: React.FC<MpModuleProps> = (props) => {
     const { mpList } = props
     const [dataSource, serDataSource] = useState<Mp[]>()
 
     const handleModifyMpList = () => {
-        serDataSource(mpList.map(e => ({ ...e, unit: "毫克每立方米" })))
+        serDataSource(mpList.map(e => ({ ...e, unit: "mg/m³" })))
     }
 
     const columns = useMemo<ColumnsType<any>>(() => {
@@ -72,4 +72,4 @@ const MpModule: React.FC<MpModuleProps> = (props) => {
     )
 }
 
-export default MpModule
+export default MpTableModule

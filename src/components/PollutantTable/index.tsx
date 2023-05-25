@@ -4,9 +4,9 @@ import { InputNumber, Table, message } from 'antd'
 import { getPollutantList as getPollutantList, modifyPollutant } from "@/services"
 import styles from './index.module.less'
 
-const PollutantModule: React.FC = () => {
+const PollutantTableModule: React.FC = () => {
     const [loading, setLoading] = useState(true)
-    const [emissionList, setEmissionList] = useState<Pollutant[]>()
+    const [pollutantList, setPollutantList] = useState<Pollutant[]>()
     const columns = useMemo<ColumnsType<any>>(() => {
         return [
             {
@@ -65,7 +65,7 @@ const PollutantModule: React.FC = () => {
     const handleGetPollutantList = () => {
         getPollutantList()
             .then(req => {
-                setEmissionList(req.data)
+                setPollutantList(req.data)
                 setLoading(false)
             })
             .catch(() => {
@@ -80,7 +80,7 @@ const PollutantModule: React.FC = () => {
     return (
         <Table
             columns={columns}
-            dataSource={emissionList}
+            dataSource={pollutantList}
             rowKey='id'
             loading={loading}
             pagination={false}
@@ -89,4 +89,4 @@ const PollutantModule: React.FC = () => {
     )
 }
 
-export default PollutantModule
+export default PollutantTableModule

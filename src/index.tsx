@@ -12,7 +12,7 @@ import { getUser } from './services';
 import { setItem } from './utils/Storage';
 import { PowerEnum } from './constants';
 import { Client } from './utils';
-import NotFound from './components/notFound';
+import NotFound from './components/NotFound';
 moment.locale('zh-cn')
 
 const App = () => {

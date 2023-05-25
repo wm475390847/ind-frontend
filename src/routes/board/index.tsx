@@ -187,8 +187,8 @@ const DataBoard: React.FC = () => {
                                     (handleParseShiftAvg() as [string, number][]).map(([key, value]) => (
                                         <div key={key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <div style={{ marginLeft: '30px', fontVariantNumeric: 'tabular-nums' }}>{key}时</div>
-                                            <div >{value}</div>
-                                            <div style={{ marginRight: '30px' }}>mg/m³</div>
+                                            <div style={{ fontVariantNumeric: 'tabular-nums' }}>{value}</div>
+                                            <div style={{ marginRight: '30px', fontVariantNumeric: 'tabular-nums' }}>mg/m³</div>
                                         </div>
                                     ))
                                 }
@@ -197,16 +197,16 @@ const DataBoard: React.FC = () => {
                             <td className={styles.td4}>今日班组排放均值</td>
                         </tr>
                         <tr>
-                            <td className={styles.td5}>{GroupIdList[0]}{'值\n'}{handleGetGroupValue("1")} mg/m³</td>
+                            <td className={styles.td5} >{GroupIdList[0]}{'组值\n'}{handleGetGroupValue("1")} mg/m³</td>
                         </tr>
                         <tr>
-                            <td className={styles.td5} >{GroupIdList[1]}{'值\n'}{handleGetGroupValue("2")} mg/m³</td>
+                            <td className={styles.td5} >{GroupIdList[1]}{'组值\n'}{handleGetGroupValue("2")} mg/m³</td>
                         </tr>
                         <tr>
-                            <td className={styles.td5}>{GroupIdList[2]}{'值\n'}{handleGetGroupValue("3")} mg/m³</td>
+                            <td className={styles.td5}>{GroupIdList[2]}{'组值\n'}{handleGetGroupValue("3")} mg/m³</td>
                         </tr>
                         <tr>
-                            <td className={styles.td5}>{GroupIdList[3]}{'值\n'}{handleGetGroupValue("4")} mg/m³</td>
+                            <td className={styles.td5}>{GroupIdList[3]}{'组值\n'}{handleGetGroupValue("4")} mg/m³</td>
                         </tr>
                         <tr>
                             <td className={styles.td6}>剩余分钟数min</td>

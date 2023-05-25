@@ -11,7 +11,8 @@ export class Client {
      * 存在本地缓存中的key
      */
     public static TOKEN_IDENTIFIER: string = 'ind.token';
-    public static USER_TYPE: string = 'user.type';
+
+    public static USER_INFO: string = 'userInfo';
 
     /**
      * 服务端的token
@@ -31,7 +32,6 @@ export class Client {
         // 不传入的话使用默认的url
         options.http = DOMAIN;
         this.createAxios(options.http)
-
     }
 
     /**
@@ -113,7 +113,7 @@ export class Client {
                 // 请空本地缓存token及浏览器缓存
                 this._token = '';
                 removeItem(Client.TOKEN_IDENTIFIER);
-                removeItem(Client.USER_TYPE);
+                removeItem(Client.USER_INFO);
                 resolve(res);
             } else {
                 reject(res)
@@ -132,7 +132,6 @@ export class Client {
             if (res?.code === '200') {
                 this._token = res.data.token;
                 setItem(Client.TOKEN_IDENTIFIER, this._token);
-                setItem(Client.USER_TYPE, res.data.type)
                 resolve(res);
             } else {
                 reject(res)
@@ -178,7 +177,9 @@ export class Client {
         //返回登录页面
         const loginPageUrl = '/login';
         const newUrl = `${loginPageUrl}`;
-        window.location.href = newUrl;
+        if (location.pathname != '/login') {
+            window.location.href = newUrl;
+        }
     }
 
     private getConfig(contentType: string): AxiosRequestConfig {

@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, message } from 'antd';
 import { Client } from "@/utils/client"
 import React, { useState } from "react";
@@ -6,7 +5,6 @@ import styles from './index.module.less';
 
 const LoginPage: React.FC = () => {
     const [form] = Form.useForm()
-    const navigate = useNavigate();
     const [buttonLoading, setButtonLoading] = useState(false)
 
     const onSubmit = () => {
@@ -16,7 +14,7 @@ const LoginPage: React.FC = () => {
                 .login({ ...values, password: values.password })
                 .then(res => {
                     message.success(res.message)
-                    navigate('/app/board')
+                    window.location.href = '/app/board'
                 })
                 .catch(err => message.error(err.message))
                 .finally(() => setButtonLoading(false))

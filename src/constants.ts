@@ -39,3 +39,11 @@ export const UserTypeList = [
 export const GroupIdList = [
   "甲", "乙", "丙", "丁"
 ]
+
+/** 权限key */
+export enum PowerEnum {
+  /** admin 管理员 */
+  admin = 0,
+  /**  */
+  common = 1,
+}

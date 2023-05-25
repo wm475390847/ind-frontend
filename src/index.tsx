@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { ReactNode, SetStateAction, Suspense, useEffect, useState } from 'react'
 import { ConfigProvider } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './routes/login'
@@ -8,31 +8,78 @@ import routes from './routes'
 import moment from 'moment'
 import zhCN from 'antd/es/locale/zh_CN';
 import './index.css'
+import { getUser } from './services';
+import { setItem } from './utils/Storage';
+import { PowerEnum } from './constants';
+import { Client } from './utils';
+import NotFound from './components/notFound';
 moment.locale('zh-cn')
 
-const routeList: any[] = [];
-routes.map((item, index) => {
-  if (item.children?.length > 0) {
-    item.children.map((inItem, inIndex) => {
-      routeList.push((
-        <Route
-          key={`${inItem.name}-${inIndex}`}
-          path={inItem.path}
-          element={<inItem.element />}
-        />
-      ))
-    })
-  } else {
-    routeList.push((
-      <Route
-        key={`${item.name}-${index}`}
-        path={item.path}
-        element={< item.element />}
-      />
-    ));
-  }
-})
 const App = () => {
+
+  const [routeList, setRouteList] = useState<React.ReactNode[]>([])
+  const [geting, setGeting] = useState<boolean>(true)
+
+  useEffect(() => {
+    getUser()
+      .then((data: any) => {
+        // 将userInfo放入浏览器缓存
+        setItem(Client.USER_INFO, JSON.stringify(data));
+        const roleId = data.roleId;
+        const _rl: SetStateAction<ReactNode[]> | JSX.Element[] = [];
+        if (roleId === PowerEnum.admin) { // admin权限返回所有路由
+          routes.map((item, index) => {
+            if (item.children?.length > 0) {
+              item.children.map((inItem, inIndex) => {
+                _rl.push((
+                  <Route
+                    key={`${inItem.name}-${inIndex}`}
+                    path={inItem.path}
+                    element={<inItem.element />}
+                  />
+                ));
+              })
+            } else {
+              _rl.push((
+                <Route
+                  key={`${item.name}-${index}`}
+                  path={item.path}
+                  element={<item.element />}
+                />
+              ));
+            }
+          });
+          setGeting(false)
+        } else if (roleId != PowerEnum.admin) {
+          routes.map((item, index) => {
+            if (item.children?.length > 0 && item.power?.includes(roleId)) {
+              item.children.map((inItem, inIndex) => {
+                if (inItem.power?.includes(roleId)) {
+                  _rl.push((
+                    <Route
+                      key={`${inItem.name}-${inIndex}`}
+                      path={inItem.path}
+                      element={<inItem.element />}
+                    />
+                  ));
+                }
+              })
+            } else if (item.power?.includes(roleId)) {
+              _rl.push((
+                <Route
+                  key={`${item.name}-${index}`}
+                  path={item.path}
+                  element={<item.element />}
+                />
+              ));
+            }
+          })
+          setGeting(false)
+        }
+        setRouteList(_rl)
+      }).catch()
+  }, [])
+
   return (
     <Suspense fallback={<div />}>
       <BrowserRouter>
@@ -42,8 +89,11 @@ const App = () => {
           )}>
             {routeList}
           </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="*" element={<div>NotFound</div>} />
+          <Route path="/login" element={<LoginPage />} />{
+            !geting && (
+              <Route path="*" element={<NotFound />} />
+            )
+          }
         </Routes>
       </BrowserRouter>
     </Suspense>
@@ -52,6 +102,15 @@ const App = () => {
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+// 将原来的 createRoot 调用改为 root.render
+root.render(
+  <ConfigProvider locale={zhCN}>
+    <App />
+  </ConfigProvider>
+);
+
+// 更新 root 对象
 root.render(
   <ConfigProvider locale={zhCN}>
     <App />

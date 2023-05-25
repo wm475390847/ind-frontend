@@ -17,7 +17,7 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import AccountModule from '../Account';
-import { setItem } from '@/utils/Storage';
+import { getItem, setItem } from '@/utils/Storage';
 
 type PageLayoutModuleProp = {
   children?: ReactElement | ReactElement[];
@@ -44,18 +44,6 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
     setOpenKeys(_keys);
   }
 
-  const handleGetUserInfo = () => {
-    getUser()
-      .then((res: any) => {
-        setUserInfo({ ...res })
-        setAvatar('')
-        setItem(Client.USER_TYPE, res.type)
-      })
-      .catch((errObj: any) => {
-        message.error(errObj.message);
-      })
-  }
-
   /**
    * 退出登录
    */
@@ -79,7 +67,10 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
     })
 
   useEffect(() => {
-    handleGetUserInfo();
+    const info = getItem(Client.USER_INFO)
+    const userInfo = JSON.parse(info)
+    setUserInfo(userInfo)
+    setAvatar('')
     const _pathArr: any = location.pathname.split('/');
     if (_pathArr.length === 3) {
       setSelectKey(_pathArr[2]);

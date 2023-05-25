@@ -1,6 +1,7 @@
 .wrap {
     display: flex;
     flex-direction: column;
+    height: calc(~ '100% - 20px');
 
     .td1 {
         width: 1100px;
@@ -14,7 +15,7 @@
     }
 
     .td3 {
-        font-size: 30px;
+        font-size: 20px;
     }
 
     .td4 {
@@ -58,6 +59,7 @@
     .buttonGroup {
 
         button {
+            box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
             border: 1px solid #86888b;
             width: 100px;
             border-radius: 0px !important;
@@ -73,12 +75,10 @@
     .updateButton {
         display: flex;
         justify-content: flex-end;
-        height: calc(~ '100% - 80px');
 
         button {
             height: 40px;
             width: 120px;
-            margin-top: 10px;
             font-size: 15px;
         }
     }

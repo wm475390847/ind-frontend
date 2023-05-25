@@ -17,13 +17,15 @@ import {
 } from '@ant-design/icons';
 import PopupModule from '../Popup';
 import { getItem } from '@/utils/Storage';
+import { PowerEnum } from '@/constants';
 
 type PageLayoutModuleProp = {
   children?: ReactElement | ReactElement[];
   routes: RouteBase[];
+  roleId: number
 };
 
-export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => {
+export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes, roleId }) => {
   const { Sider, Content, Header } = Layout
   const [selectKey, setSelectKey] = useState(null)
   const [openKeys, setOpenKeys] = useState<any[]>([])
@@ -31,6 +33,7 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
   const [collapsed, setCollapsed] = useState(false)
   const [userInfo, setUserInfo] = useState<User>()
   const [type, setType] = useState<number>()
+  const [menuItems, setMenuItem] = useState<any[]>([]);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -59,25 +62,12 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
 
   /**
    * 创建icon图标元素
+   * @name 图标名称
    */
   const handleIconToElement = (name: string) =>
     React.createElement(Icon && (Icon as any)[name], {
       style: { fontSize: '15px' }
     })
-
-  useEffect(() => {
-    const info = getItem(Client.USER_INFO)
-    const userInfo = JSON.parse(info)
-    setUserInfo(userInfo)
-    setAvatar('')
-    const _pathArr: any = location.pathname.split('/');
-    if (_pathArr.length === 3) {
-      setSelectKey(_pathArr[2]);
-    } else {
-      setSelectKey(_pathArr[3]);
-      setOpenKeys([_pathArr[2]]);
-    }
-  }, []);
 
   /**
    * 点开头像弹窗之后的内容
@@ -101,33 +91,63 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
     </div>
   )
 
-  /**
-   * 获取目录集合
-   */
-  const menuItems = (routes || []).filter((i: RouteBase) => !i.hideInMenu).map(item => {
-    if (item.children?.length > 0) {
-      const menuItem = {
-        label: item.name,
-        key: item.path.split('/')[2],
-        icon: handleIconToElement(item.icon),
-        className: styles.menuFirstItem,
-        children: item.children.filter((i: RouteBase) => !i.hideInMenu).map(inItem => ({
-          label: (<Link to={inItem.path}>{inItem.name}</Link>),
-          key: inItem.path.split('/')[3],
-          icon: handleIconToElement(item.icon),
-          className: styles.menuItem,
-        }))
-      }
-      return menuItem;
+  const handleMenuItems = () => {
+    // 处理普通菜单项
+    const getMenuItem = (item: RouteBase) => ({
+      label: (<Link to={item.path}>{item.name}</Link>),
+      key: item.path.split('/')[2],
+      icon: handleIconToElement(item.icon),
+      className: styles.menuItem,
+    });
+
+    // 处理子菜单项
+    const getMenuChildren = (item: RouteBase) =>
+      item.children
+        ?.filter((i: RouteBase) => !i.hideInMenu)
+        .map((inItem) => getMenuItem(inItem));
+
+    // 处理一级菜单项
+    const getFirstMenuItem = (item: RouteBase) => ({
+      label: item.name,
+      key: item.path.split('/')[2],
+      icon: handleIconToElement(item.icon),
+      className: styles.menuFirstItem,
+      children: getMenuChildren(item),
+    });
+
+    // 根据用户角色不同，生成符合权限的菜单项列表
+    let menuList: any[];
+    if (roleId === PowerEnum.admin) {
+      menuList = (routes || [])
+        .filter((i: RouteBase) => !i.hideInMenu)
+        .map((item) =>
+          item.children?.length > 0 ? getFirstMenuItem(item) : getMenuItem(item)
+        );
     } else {
-      return {
-        label: (<Link to={item.path}>{item.name}</Link>),
-        key: item.path.split('/')[2],
-        icon: handleIconToElement(item.icon),
-        className: styles.menuItem,
-      }
+      menuList = (routes || [])
+        .filter((i: RouteBase) => !i.hideInMenu && i.power?.includes(roleId))
+        .map((item) =>
+          item.children?.length > 0 ? getFirstMenuItem(item) : getMenuItem(item)
+        );
     }
-  });
+    // 将生成的菜单项列表保存在组件状态中
+    setMenuItem(menuList);
+  };
+
+  useEffect(() => {
+    const info = getItem(Client.USER_INFO)
+    const userInfo = JSON.parse(info)
+    setUserInfo(userInfo)
+    setAvatar('')
+    const _pathArr: any = location.pathname.split('/');
+    if (_pathArr.length === 3) {
+      setSelectKey(_pathArr[2]);
+    } else {
+      setSelectKey(_pathArr[3]);
+      setOpenKeys([_pathArr[2]]);
+    }
+    handleMenuItems()
+  }, []);
 
   return (
     <>
@@ -139,7 +159,6 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes }) => 
           <Menu
             theme="dark"
             mode="inline"
-            defaultOpenKeys={[menuItems[0].key]}
             selectedKeys={[selectKey] as unknown as string[]}
             openKeys={openKeys}
             items={menuItems}

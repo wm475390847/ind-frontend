@@ -19,6 +19,7 @@ const App = () => {
 
   const [routeList, setRouteList] = useState<React.ReactNode[]>([])
   const [geting, setGeting] = useState<boolean>(true)
+  const [roleId, setRoleId] = useState<number>(0)
 
   useEffect(() => {
     getUser()
@@ -26,6 +27,7 @@ const App = () => {
         // 将userInfo放入浏览器缓存
         setItem(Client.USER_INFO, JSON.stringify(data));
         const roleId = data.roleId;
+        setRoleId(roleId)
         const _rl: SetStateAction<ReactNode[]> | JSX.Element[] = [];
         if (roleId === PowerEnum.admin) { // admin权限返回所有路由
           routes.map((item, index) => {
@@ -85,7 +87,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={(
-            <PageLayoutModule routes={routes} />
+            <PageLayoutModule routes={routes} roleId={roleId} />
           )}>
             {routeList}
           </Route>

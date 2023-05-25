@@ -193,7 +193,13 @@ const DataBoard: React.FC = () => {
                                     ))
                                 }
                             </td>
-                            <td className={styles.td3} colSpan={2} rowSpan={5}>草泥马</td>
+                            <td className={styles.td3} colSpan={2} rowSpan={5} style={{ whiteSpace: 'pre-line' }}>
+                                剩余时间内，若平均氧含量，实测浓度实时均值，预测当前小时排放浓度将达标/超标。
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                当前小时折算浓度均值为，建议控制氧含量在情况下时，保持实测浓度实时均值在以下。
+                            </td>
                             <td className={styles.td4}>今日班组排放均值</td>
                         </tr>
                         <tr>
@@ -226,7 +232,7 @@ const DataBoard: React.FC = () => {
                 </table>
             }
 
-            <div style={{ marginTop: '11px' }}>
+            <div style={{ marginTop: '11px', flex: '1' }}>
                 <div className={styles.buttonGroup}>
                     {mpList.map((item, index) => (
                         <Button
@@ -250,6 +256,7 @@ const DataBoard: React.FC = () => {
                     ))}
                 </div>
             </div>
+
 
             <div className={styles.updateButton}>
                 <Button type="primary" onClick={() => handleResetData()} loading={buttonLoading}>更新数据</Button>

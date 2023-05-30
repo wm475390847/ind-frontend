@@ -92,3 +92,15 @@ interface ShiftHourAvg {
   mpId: string
   value: object
 }
+
+interface PollutantRealtimeAvg {
+  mpName: string
+  mpId: string
+  value: object
+}
+
+interface O2RealtimeAvg {
+  mpName: string
+  mpId: string
+  value: number
+}

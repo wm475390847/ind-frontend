@@ -104,7 +104,10 @@ export const PageLayoutModule: React.FC<PageLayoutModuleProp> = ({ routes, roleI
     const getMenuChildren = (item: RouteBase) =>
       item.children
         ?.filter((i: RouteBase) => !i.hideInMenu)
-        .map((inItem) => getMenuItem(inItem));
+        .map((inItem) => ({
+          ...getMenuItem(inItem),
+          key: String(inItem.path), // 使用子菜单项的 id 属性作为 key，并转换为字符串类型
+        }));
 
     // 处理一级菜单项
     const getFirstMenuItem = (item: RouteBase) => ({

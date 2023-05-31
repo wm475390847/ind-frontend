@@ -19,7 +19,7 @@ const PollutantTableModule: React.FC = () => {
                 title: '排放物编号',
                 dataIndex: 'code',
                 key: 'code',
-                width: '10%',
+                width: '20%',
             },
             {
                 title: '排放物名称',
@@ -31,7 +31,7 @@ const PollutantTableModule: React.FC = () => {
                 title: '排放标准',
                 dataIndex: 'standard',
                 key: 'standard',
-                width: '30%',
+                width: '20%',
                 render: (_, record) => {
                     return (
                         <div className={styles.input}>

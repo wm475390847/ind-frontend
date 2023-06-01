@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
             <Form className={styles.loginForm} form={form}>
                 <h1 className={styles.loginTitle}>登录</h1>
                 <Form.Item name="phone" rules={[{ required: true, message: '请输入手机号' }]} >
-                    <Input className={styles.loginInput} maxLength={11} placeholder="手机号" />
+                    <Input className={styles.loginInput} maxLength={11} placeholder="请输入手机号" />
                 </Form.Item>
 
                 <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]} >
